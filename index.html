@@ -4,20 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Educators Exchange</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: 'Nunito', sans-serif;
 }
 
 body {
   background: #f2f6fc;
+  padding-bottom: 80px;
 }
 
-/* HEADER */
+/* ── HEADER ── */
 .header {
   padding: 15px 20px;
   background: white;
@@ -25,34 +27,60 @@ body {
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  position: relative;
 }
 
 .header h1 {
   color: #3a8dde;
   font-size: 20px;
+  font-weight: 800;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
-/* SEARCH BAR */
+.help-btn {
+  margin-left: auto;
+  background: #eef3f9;
+  border: none;
+  color: #3a8dde;
+  font-weight: 700;
+  font-size: 13px;
+  padding: 7px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+  transition: background 0.2s;
+}
+.help-btn:hover {
+  background: #d9eaf8;
+}
+
+/* ── SEARCH BAR ── */
 .search-container {
   padding: 10px 20px;
   background: white;
 }
-
 .search-container input {
   width: 100%;
-  padding: 12px;
+  padding: 12px 16px;
   border-radius: 15px;
   border: none;
   background: #eef3f9;
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px;
+  outline: none;
 }
 
-/* CATEGORY SCROLL */
+/* ── CATEGORY SCROLL ── */
 .categories {
   display: flex;
   overflow-x: auto;
   padding: 10px;
   gap: 10px;
+  scrollbar-width: none;
 }
+.categories::-webkit-scrollbar { display: none; }
 
 .cat {
   padding: 8px 15px;
@@ -61,14 +89,16 @@ body {
   white-space: nowrap;
   cursor: pointer;
   box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s;
 }
-
 .cat.active {
   background: #3a8dde;
   color: white;
 }
 
-/* GRID */
+/* ── GRID ── */
 .grid {
   padding: 15px;
   display: grid;
@@ -76,33 +106,34 @@ body {
   gap: 15px;
 }
 
-/* CARD */
+/* ── CARD ── */
 .card {
   background: white;
   border-radius: 20px;
   padding: 10px;
   box-shadow: 0 5px 10px rgba(0,0,0,0.05);
 }
-
 .card img {
   width: 100%;
   border-radius: 15px;
+  height: 130px;
+  object-fit: cover;
 }
-
 .card h3 {
-  font-size: 16px;
-  margin: 5px 0;
+  font-size: 14px;
+  margin: 6px 0 3px;
+  font-weight: 700;
 }
-
 .price {
   color: #3a8dde;
-  font-weight: bold;
+  font-weight: 800;
+  font-size: 14px;
 }
 
-/* FLOAT BUTTON */
+/* ── FLOATING ACTION BUTTON ── */
 .fab {
   position: fixed;
-  bottom: 70px;
+  bottom: 80px;
   right: 20px;
   background: #3a8dde;
   color: white;
@@ -112,65 +143,257 @@ body {
   width: 55px;
   height: 55px;
   cursor: pointer;
+  box-shadow: 0 4px 15px rgba(58,141,222,0.4);
+  z-index: 100;
+  transition: transform 0.2s;
 }
+.fab:hover { transform: scale(1.1); }
 
-/* BOTTOM NAV */
+/* ── BOTTOM NAV — glassmorphism blue ── */
 .bottom-nav {
   position: fixed;
   bottom: 0;
   width: 100%;
-  background: white;
+  background: rgba(58, 141, 222, 0.18);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(58, 141, 222, 0.2);
   display: flex;
   justify-content: space-around;
-  padding: 10px 0;
-  box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+  padding: 10px 0 12px;
+  z-index: 200;
 }
-
-.bottom-nav div {
-  text-align: center;
-  font-size: 12px;
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
   cursor: pointer;
+  color: #2a6db5;
+  transition: color 0.2s;
+}
+.nav-item:hover { color: #1a5a9e; }
+.nav-item span {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+.nav-item svg {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
-/* MODAL */
+/* ── MODAL OVERLAY ── */
 .modal {
   display: none;
   position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0,0,0,0.45);
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+}
+.modal.open {
+  display: flex;
 }
 
+/* ── MODAL CARD ── */
 .modal-content {
   background: white;
-  margin: 20% auto;
-  padding: 20px;
-  width: 300px;
-  border-radius: 15px;
+  padding: 25px 20px;
+  width: 320px;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
 }
 
-.modal input, .modal select {
+/* ── MODAL HEADER + BACK BUTTON ── */
+.modal-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.modal-header h3 {
+  font-size: 17px;
+  font-weight: 800;
+  color: #222;
+  margin: 0;
+}
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #eef3f9;
+  border: none;
+  color: #3a8dde;
+  font-weight: 700;
+  font-size: 13px;
+  padding: 6px 12px 6px 8px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.back-btn:hover { background: #d9eaf8; }
+.back-btn svg {
+  width: 16px;
+  height: 16px;
+  stroke: #3a8dde;
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ── FORM FIELDS ── */
+.modal-content input,
+.modal-content select {
   width: 100%;
   margin: 5px 0;
-  padding: 10px;
+  padding: 11px 13px;
+  border-radius: 10px;
+  border: 1.5px solid #e0eaf5;
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px;
+  background: #f8fbff;
+  outline: none;
+  transition: border 0.2s;
+}
+.modal-content input:focus,
+.modal-content select:focus {
+  border-color: #3a8dde;
+}
+
+/* ── PHOTO UPLOAD ── */
+.photo-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 5px 0;
+  padding: 11px 13px;
+  border-radius: 10px;
+  border: 1.5px dashed #b0ccee;
+  background: #f0f7ff;
+  font-size: 13px;
+  font-weight: 600;
+  color: #3a8dde;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.photo-label:hover { background: #ddeeff; }
+.photo-label svg {
+  width: 18px;
+  height: 18px;
+  stroke: #3a8dde;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+#photoInput { display: none; }
+#photoPreview {
+  width: 100%;
+  border-radius: 10px;
+  margin: 5px 0;
+  display: none;
+  max-height: 140px;
+  object-fit: cover;
+}
+
+/* ── MODAL ACTION BUTTONS ── */
+.modal-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+.btn-post {
+  flex: 1;
+  background: #3a8dde;
+  color: white;
+  border: none;
+  padding: 11px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-post:hover { background: #2a7bd0; }
+.btn-cancel {
+  flex: 1;
+  background: #eef3f9;
+  color: #555;
+  border: none;
+  padding: 11px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-cancel:hover { background: #dde8f5; }
+
+/* ── HELP MODAL CARD ── */
+.help-modal-content {
+  background: white;
+  padding: 25px 20px;
+  width: 320px;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+}
+.help-modal-content p {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+.help-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f4f9;
+  font-size: 13px;
+  color: #444;
+}
+.help-item:last-of-type { border-bottom: none; }
+.help-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.help-item strong {
+  display: block;
+  font-weight: 700;
+  font-size: 13px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- HEADER -->
+<!-- ── HEADER ── -->
 <div class="header">
   <h1>Educators Exchange</h1>
-  <div>💬</div>
+  <button class="help-btn" onclick="openHelp()">Help</button>
 </div>
 
-<!-- SEARCH -->
+<!-- ── SEARCH ── -->
 <div class="search-container">
   <input type="text" id="search" placeholder="Search resources...">
 </div>
 
-<!-- CATEGORIES -->
+<!-- ── CATEGORIES ── -->
 <div class="categories">
   <div class="cat active" onclick="setCategory('all', this)">All</div>
   <div class="cat" onclick="setCategory('setup', this)">Setup</div>
@@ -180,26 +403,65 @@ body {
   <div class="cat" onclick="setCategory('lifestyle', this)">Lifestyle</div>
 </div>
 
-<!-- ITEMS -->
+<!-- ── ITEM GRID ── -->
 <div class="grid" id="items"></div>
 
-<!-- FLOAT BUTTON -->
+<!-- ── FLOATING + BUTTON ── -->
 <button class="fab" onclick="openModal()">+</button>
 
-<!-- BOTTOM NAV -->
+<!-- ── BOTTOM NAV ── -->
 <div class="bottom-nav">
-  <div>🏠<br>Home</div>
-  <div onclick="alert('Chat coming soon')">💬<br>Chat</div>
-  <div onclick="openModal()">➕<br>Post</div>
-  <div>👤<br>Profile</div>
+  <div class="nav-item">
+    <svg viewBox="0 0 24 24">
+      <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/>
+      <path d="M9 21V12h6v9"/>
+    </svg>
+    <span>Home</span>
+  </div>
+  <div class="nav-item" onclick="alert('Explore coming soon!')">
+    <svg viewBox="0 0 24 24">
+      <circle cx="11" cy="11" r="7"/>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <span>Explore</span>
+  </div>
+  <div class="nav-item" onclick="openModal()">
+    <svg viewBox="0 0 24 24">
+      <rect x="3" y="3" width="18" height="18" rx="4"/>
+      <line x1="12" y1="8" x2="12" y2="16"/>
+      <line x1="8" y1="12" x2="16" y2="12"/>
+    </svg>
+    <span>Post</span>
+  </div>
+  <div class="nav-item" onclick="alert('Messages coming soon!')">
+    <svg viewBox="0 0 24 24">
+      <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+    </svg>
+    <span>Messages</span>
+  </div>
+  <div class="nav-item">
+    <svg viewBox="0 0 24 24">
+      <circle cx="12" cy="8" r="4"/>
+      <path d="M4 20c0-4 3.58-7 8-7s8 3 8 7"/>
+    </svg>
+    <span>Profile</span>
+  </div>
 </div>
 
-<!-- MODAL -->
-<div class="modal" id="modal">
+<!-- ── POST MODAL ── -->
+<div class="modal" id="modal" onclick="handleBackdropClick(event, 'modal')">
   <div class="modal-content">
-    <h3>Post Item</h3>
+
+    <div class="modal-header">
+      <button class="back-btn" onclick="closeModal()">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        Back
+      </button>
+      <h3>Post an Item</h3>
+    </div>
+
     <input id="title" placeholder="Title">
-    <input id="price" placeholder="Price">
+    <input id="price" placeholder="Price (e.g. 5.00)">
     <select id="category">
       <option value="setup">Setup</option>
       <option value="curriculum">Curriculum</option>
@@ -207,71 +469,179 @@ body {
       <option value="themes">Themes</option>
       <option value="lifestyle">Lifestyle</option>
     </select>
-    <button onclick="addItem()">Post</button>
+
+    <label class="photo-label" for="photoInput">
+      <svg viewBox="0 0 24 24">
+        <rect x="3" y="3" width="18" height="18" rx="2"/>
+        <circle cx="8.5" cy="8.5" r="1.5"/>
+        <polyline points="21 15 16 10 5 21"/>
+      </svg>
+      Add a Photo
+    </label>
+    <input type="file" id="photoInput" accept="image/*" onchange="previewPhoto(event)">
+    <img id="photoPreview" alt="Preview">
+
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-post" onclick="addItem()">Post</button>
+    </div>
+
   </div>
 </div>
 
+<!-- ── HELP MODAL ── -->
+<div class="modal" id="helpModal" onclick="handleBackdropClick(event, 'helpModal')">
+  <div class="help-modal-content">
+
+    <div class="modal-header">
+      <button class="back-btn" onclick="closeHelp()">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        Back
+      </button>
+      <h3>&#128075; How can we help?</h3>
+    </div>
+
+    <p>Welcome to <strong>Educators Exchange</strong> — a place for teachers to share, sell, and discover classroom resources.</p>
+
+    <div class="help-item">
+      <span class="help-icon">&#128717;</span>
+      <div>
+        <strong>Browsing Items</strong>
+        Use the categories at the top to filter by type, or search for something specific.
+      </div>
+    </div>
+    <div class="help-item">
+      <span class="help-icon">&#10133;</span>
+      <div>
+        <strong>Posting an Item</strong>
+        Tap the + button or "Post" in the nav bar to list something for sale or trade.
+      </div>
+    </div>
+    <div class="help-item">
+      <span class="help-icon">&#128172;</span>
+      <div>
+        <strong>Messages</strong>
+        Connect with other educators — messaging is coming soon!
+      </div>
+    </div>
+    <div class="help-item">
+      <span class="help-icon">&#128231;</span>
+      <div>
+        <strong>Need more help?</strong>
+        Contact us at help@educatorsexchange.com
+      </div>
+    </div>
+
+    <div class="modal-actions" style="margin-top:16px">
+      <button class="btn-post" onclick="closeHelp()">Got it!</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── JAVASCRIPT ── -->
 <script>
-let items = JSON.parse(localStorage.getItem("items")) || [];
-let currentCategory = "all";
+  let items = JSON.parse(localStorage.getItem("items")) || [];
+  let currentCategory = "all";
+  let currentPhoto = null;
 
-function save() {
-  localStorage.setItem("items", JSON.stringify(items));
-}
+  // Save to localStorage
+  function save() {
+    localStorage.setItem("items", JSON.stringify(items));
+  }
 
-function render() {
-  let grid = document.getElementById("items");
-  let search = document.getElementById("search").value.toLowerCase();
+  // Render item cards
+  function render() {
+    let grid = document.getElementById("items");
+    let search = document.getElementById("search").value.toLowerCase();
+    grid.innerHTML = "";
 
-  grid.innerHTML = "";
+    items.forEach(item => {
+      if (
+        (currentCategory === "all" || item.category === currentCategory) &&
+        item.title.toLowerCase().includes(search)
+      ) {
+        let imgSrc = item.photo || "https://placehold.co/200x130/eef3f9/3a8dde?text=No+Photo";
+        grid.innerHTML += `
+          <div class="card">
+            <img src="${imgSrc}" alt="${item.title}">
+            <h3>${item.title}</h3>
+            <p class="price">$${item.price}</p>
+          </div>
+        `;
+      }
+    });
+  }
 
-  items.forEach(item => {
-    if (
-      (currentCategory === "all" || item.category === currentCategory) &&
-      item.title.toLowerCase().includes(search)
-    ) {
-      grid.innerHTML += `
-        <div class="card">
-          <img src="https://via.placeholder.com/200">
-          <h3>${item.title}</h3>
-          <p class="price">$${item.price}</p>
-        </div>
-      `;
+  // Photo preview
+  function previewPhoto(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      currentPhoto = e.target.result;
+      const preview = document.getElementById("photoPreview");
+      preview.src = currentPhoto;
+      preview.style.display = "block";
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // Add new item
+  function addItem() {
+    let title = document.getElementById("title").value.trim();
+    let price = document.getElementById("price").value.trim();
+    let category = document.getElementById("category").value;
+
+    if (!title || !price) return alert("Please fill in the title and price.");
+
+    items.push({ title, price, category, photo: currentPhoto });
+    save();
+    render();
+    closeModal();
+  }
+
+  // Category filter
+  function setCategory(cat, el) {
+    currentCategory = cat;
+    document.querySelectorAll(".cat").forEach(c => c.classList.remove("active"));
+    el.classList.add("active");
+    render();
+  }
+
+  // Open / close post modal
+  function openModal() {
+    document.getElementById("title").value = "";
+    document.getElementById("price").value = "";
+    document.getElementById("photoPreview").style.display = "none";
+    document.getElementById("photoInput").value = "";
+    currentPhoto = null;
+    document.getElementById("modal").classList.add("open");
+  }
+  function closeModal() {
+    document.getElementById("modal").classList.remove("open");
+  }
+
+  // Open / close help modal
+  function openHelp() {
+    document.getElementById("helpModal").classList.add("open");
+  }
+  function closeHelp() {
+    document.getElementById("helpModal").classList.remove("open");
+  }
+
+  // Close modal by clicking the dark backdrop
+  function handleBackdropClick(event, modalId) {
+    if (event.target.id === modalId) {
+      document.getElementById(modalId).classList.remove("open");
     }
-  });
-}
+  }
 
-function addItem() {
-  let title = document.getElementById("title").value;
-  let price = document.getElementById("price").value;
-  let category = document.getElementById("category").value;
+  // Search listener
+  document.getElementById("search").addEventListener("input", render);
 
-  if (!title || !price) return alert("Fill everything");
-
-  items.push({ title, price, category });
-  save();
+  // Initial render
   render();
-  closeModal();
-}
-
-function setCategory(cat, el) {
-  currentCategory = cat;
-  document.querySelectorAll(".cat").forEach(c => c.classList.remove("active"));
-  el.classList.add("active");
-  render();
-}
-
-function openModal() {
-  document.getElementById("modal").style.display = "block";
-}
-
-function closeModal() {
-  document.getElementById("modal").style.display = "none";
-}
-
-document.getElementById("search").addEventListener("input", render);
-
-render();
 </script>
 
 </body>
