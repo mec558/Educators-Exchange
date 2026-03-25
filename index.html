@@ -1,4 +1,3 @@
-<!-- ...existing code... -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,32 +6,39 @@
 <title>Educators Exchange</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-
-<!-- Firebase MUST load before anything else -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js" crossorigin="anonymous"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js" crossorigin="anonymous"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js" crossorigin="anonymous"></script>
 
 <style>
-/* ...existing CSS... */
 * { margin:0; padding:0; box-sizing:border-box; font-family:'Nunito',sans-serif; }
 body { background:#f2f6fc; padding-bottom:80px; }
 
-.header { padding:15px 20px; background:white; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 10px rgba(0,0,0,0.05); position:relative; }
+/* ── HEADER ── */
+.header { padding:12px 20px; background:white; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 10px rgba(0,0,0,0.05); position:relative; }
 .header h1 { color:#3a8dde; font-size:20px; font-weight:800; position:absolute; left:50%; transform:translateX(-50%); }
 .help-btn { margin-left:auto; background:#eef3f9; border:none; color:#3a8dde; font-weight:700; font-size:13px; padding:7px 14px; border-radius:20px; cursor:pointer; font-family:'Nunito',sans-serif; transition:background 0.2s; }
 .help-btn:hover { background:#d9eaf8; }
 
+/* LOGO */
+.logo-wrap { display:flex; align-items:center; gap:8px; flex-shrink:0; z-index:1; }
+.logo-icon { width:36px; height:36px; flex-shrink:0; }
+.logo-text { font-size:13px; font-weight:800; color:#3a8dde; line-height:1.2; display:none; }
+
+/* ── SEARCH ── */
 .search-container { padding:10px 20px; background:white; }
 .search-container input { width:100%; padding:12px 16px; border-radius:15px; border:none; background:#eef3f9; font-family:'Nunito',sans-serif; font-size:14px; outline:none; }
 
+/* ── CATEGORIES ── */
 .categories { display:flex; overflow-x:auto; padding:10px; gap:10px; scrollbar-width:none; }
 .categories::-webkit-scrollbar { display:none; }
 .cat { padding:8px 15px; background:white; border-radius:20px; white-space:nowrap; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.05); font-size:13px; font-weight:600; transition:all 0.2s; }
 .cat.active { background:#3a8dde; color:white; }
 
+/* ── GRID ── */
 .grid { padding:15px; display:grid; grid-template-columns:repeat(2,1fr); gap:15px; }
 
+/* ── CARD ── */
 .card { background:white; border-radius:20px; padding:10px; box-shadow:0 5px 10px rgba(0,0,0,0.05); position:relative; }
 .card img { width:100%; border-radius:15px; height:130px; object-fit:cover; }
 .card h3 { font-size:14px; margin:6px 0 2px; font-weight:700; }
@@ -44,9 +50,11 @@ body { background:#f2f6fc; padding-bottom:80px; }
 .deal-btn:hover { opacity:0.88; }
 .own-btn { display:block; width:100%; margin-top:8px; background:#ddd; color:white; border:none; border-radius:12px; padding:8px 0; font-size:13px; font-weight:800; font-family:'Nunito',sans-serif; cursor:default; }
 
+/* ── FAB ── */
 .fab { position:fixed; bottom:80px; right:20px; background:#3a8dde; color:white; font-size:25px; border:none; border-radius:50%; width:55px; height:55px; cursor:pointer; box-shadow:0 4px 15px rgba(58,141,222,0.4); z-index:100; transition:transform 0.2s; }
 .fab:hover { transform:scale(1.1); }
 
+/* ── BOTTOM NAV ── */
 .bottom-nav { position:fixed; bottom:0; width:100%; background:rgba(58,141,222,0.18); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border-top:1px solid rgba(58,141,222,0.2); display:flex; justify-content:space-around; padding:10px 0 12px; z-index:200; }
 .nav-item { display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; color:#2a6db5; transition:color 0.2s; position:relative; }
 .nav-item:hover { color:#1a5a9e; }
@@ -55,27 +63,27 @@ body { background:#f2f6fc; padding-bottom:80px; }
 .nav-badge { position:absolute; top:-2px; right:-4px; background:#ff4444; color:white; font-size:9px; font-weight:800; border-radius:10px; padding:1px 5px; display:none; }
 .nav-badge.show { display:block; }
 
+/* ── MODALS ── */
 .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.45); z-index:999; align-items:center; justify-content:center; }
 .modal.open { display:flex; }
-
 .mbox { background:white; padding:25px 20px; width:320px; border-radius:20px; box-shadow:0 20px 60px rgba(0,0,0,0.15); max-height:90vh; overflow-y:auto; }
 .mbox.wide { width:340px; }
-
 .mhdr { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
 .mhdr h3 { font-size:17px; font-weight:800; color:#222; margin:0; }
 .back-btn { display:flex; align-items:center; gap:4px; background:#eef3f9; border:none; color:#3a8dde; font-weight:700; font-size:13px; padding:6px 12px 6px 8px; border-radius:20px; cursor:pointer; font-family:'Nunito',sans-serif; transition:background 0.2s; flex-shrink:0; }
 .back-btn:hover { background:#d9eaf8; }
 .back-btn svg { width:16px; height:16px; stroke:#3a8dde; fill:none; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; }
 
+/* ── FORM FIELDS ── */
 .field { width:100%; margin:5px 0; padding:11px 13px; border-radius:10px; border:1.5px solid #e0eaf5; font-family:'Nunito',sans-serif; font-size:14px; background:#f8fbff; outline:none; transition:border 0.2s; }
 .field:focus { border-color:#3a8dde; }
-
 .photo-label { display:flex; align-items:center; gap:8px; margin:5px 0; padding:11px 13px; border-radius:10px; border:1.5px dashed #b0ccee; background:#f0f7ff; font-size:13px; font-weight:600; color:#3a8dde; cursor:pointer; transition:background 0.2s; }
 .photo-label:hover { background:#ddeeff; }
 .photo-label svg { width:18px; height:18px; stroke:#3a8dde; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 #photoInput { display:none; }
 #photoPreview { width:100%; border-radius:10px; margin:5px 0; display:none; max-height:140px; object-fit:cover; }
 
+/* ── BUTTONS ── */
 .row-btns { display:flex; gap:8px; margin-top:14px; }
 .btn-blue { flex:1; background:#3a8dde; color:white; border:none; padding:11px; border-radius:10px; font-weight:700; font-family:'Nunito',sans-serif; font-size:14px; cursor:pointer; transition:background 0.2s; }
 .btn-blue:hover { background:#2a7bd0; }
@@ -85,18 +93,21 @@ body { background:#f2f6fc; padding-bottom:80px; }
 .btn-red { width:100%; margin-top:14px; background:#fff0f0; color:#e04444; border:none; padding:11px; border-radius:10px; font-weight:700; font-family:'Nunito',sans-serif; font-size:14px; cursor:pointer; }
 .btn-red:hover { background:#ffe0e0; }
 
+/* ── AUTH ── */
 .auth-tabs { display:flex; margin-bottom:16px; border-radius:12px; overflow:hidden; border:1.5px solid #e0eaf5; }
 .auth-tab { flex:1; padding:9px; text-align:center; cursor:pointer; font-weight:700; font-size:13px; color:#888; background:#f8fbff; transition:all 0.2s; }
 .auth-tab.active { background:#3a8dde; color:white; }
 .auth-err { background:#fff0f0; border:1.5px solid #ffcccc; color:#cc3333; font-size:12px; font-weight:600; padding:8px 12px; border-radius:8px; margin:6px 0; display:none; }
 .auth-err.show { display:block; }
 
+/* ── HELP ── */
 .help-p { font-size:13px; color:#555; line-height:1.6; margin-bottom:8px; }
 .help-item { display:flex; align-items:flex-start; gap:10px; padding:10px 0; border-bottom:1px solid #f0f4f9; font-size:13px; color:#444; }
 .help-item:last-of-type { border-bottom:none; }
 .hi { font-size:20px; flex-shrink:0; }
 .help-item strong { display:block; font-weight:700; font-size:13px; }
 
+/* ── PROFILE ── */
 .p-avatar { width:72px; height:72px; border-radius:50%; background:linear-gradient(135deg,#3a8dde,#6ab4f5); display:flex; align-items:center; justify-content:center; font-size:28px; color:white; font-weight:800; margin:0 auto 10px; }
 .p-name { text-align:center; font-size:18px; font-weight:800; color:#222; }
 .p-email { text-align:center; font-size:12px; color:#888; margin-bottom:14px; }
@@ -115,6 +126,7 @@ body { background:#f2f6fc; padding-bottom:80px; }
 .p-del { background:#fff0f0; border:none; color:#e04444; font-size:12px; font-weight:700; padding:5px 10px; border-radius:8px; cursor:pointer; font-family:'Nunito',sans-serif; flex-shrink:0; }
 .p-del:hover { background:#ffe0e0; }
 
+/* ── INBOX ── */
 .ibox { background:white; width:340px; border-radius:20px; box-shadow:0 20px 60px rgba(0,0,0,0.15); max-height:90vh; display:flex; flex-direction:column; overflow:hidden; }
 .ihdr { padding:18px 20px 14px; border-bottom:1px solid #f0f4f9; display:flex; align-items:center; gap:10px; flex-shrink:0; }
 .ihdr h3 { font-size:17px; font-weight:800; color:#222; margin:0; flex:1; }
@@ -130,36 +142,120 @@ body { background:#f2f6fc; padding-bottom:80px; }
 .udot { width:9px; height:9px; background:#3a8dde; border-radius:50%; flex-shrink:0; }
 .iempty { text-align:center; color:#bbb; font-size:14px; padding:40px 20px; line-height:1.7; }
 
-.cbox { background:white; width:360px; border-radius:20px; box-shadow:0 20px 60px rgba(0,0,0,0.15); max-height:92vh; display:flex; flex-direction:column; overflow:hidden; }
-.chdr { padding:14px 16px; border-bottom:1px solid #f0f4f9; display:flex; align-items:center; gap:10px; flex-shrink:0; }
+/* ══════════════════════════════
+   CHAT — FULLSCREEN
+══════════════════════════════ */
+#chatModal {
+  display:none;
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:white;          /* no dark overlay — it IS the screen */
+  z-index:1000;
+  flex-direction:column;
+  align-items:stretch;
+  justify-content:flex-start;
+}
+#chatModal.open { display:flex; }
+
+.cbox {
+  width:100%; height:100%;
+  display:flex; flex-direction:column;
+  overflow:hidden;
+  background:white;
+  border-radius:0;
+  box-shadow:none;
+}
+
+/* chat header */
+.chdr {
+  padding:14px 16px;
+  border-bottom:1px solid #f0f4f9;
+  display:flex; align-items:center; gap:10px;
+  flex-shrink:0;
+  background:white;
+}
 .cav { width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,#3a8dde,#6ab4f5); display:flex; align-items:center; justify-content:center; font-size:14px; color:white; font-weight:800; flex-shrink:0; }
 .cname { font-size:14px; font-weight:800; color:#222; }
 .csub  { font-size:11px; color:#888; }
+
+/* item preview bar */
 .cibar { display:flex; align-items:center; gap:10px; padding:10px 16px; background:#f4f8ff; border-bottom:1px solid #e5eef9; flex-shrink:0; }
 .cibar img { width:44px; height:44px; border-radius:10px; object-fit:cover; flex-shrink:0; }
 .cibar-t { font-size:13px; font-weight:700; color:#222; }
 .cibar-p { font-size:12px; color:#3a8dde; font-weight:800; }
-.cmsgs { flex:1; overflow-y:auto; padding:14px 16px; display:flex; flex-direction:column; gap:8px; background:#f8fbff; }
-.mrow { display:flex; align-items:flex-end; gap:6px; }
-.mrow.mine { flex-direction:row-reverse; }
-.bbl { max-width:72%; padding:9px 13px; border-radius:18px; font-size:13px; line-height:1.5; word-break:break-word; }
-.mrow.theirs .bbl { background:white; color:#222; border-bottom-left-radius:4px; box-shadow:0 1px 4px rgba(0,0,0,0.07); }
-.mrow.mine   .bbl { background:#3a8dde; color:white; border-bottom-right-radius:4px; }
-.mtime { font-size:10px; color:#bbb; padding-bottom:2px; flex-shrink:0; }
-.mwho  { font-size:10px; color:#aaa; margin-bottom:2px; }
+
+/* messages area — fills remaining space */
+.cmsgs {
+  flex:1;
+  overflow-y:auto;
+  padding:14px 16px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  background:#f8fbff;
+}
+
+/* ── MESSAGE BUBBLES — fixed so text never splits ── */
+.mrow {
+  display:flex;
+  align-items:flex-end;
+  gap:6px;
+  width:100%;
+}
+.mrow.mine  { flex-direction:row-reverse; }
+
+/* wrapper keeps bubble + timestamp together */
+.mbody {
+  display:flex;
+  flex-direction:column;
+  max-width:72%;
+}
+.mrow.mine  .mbody { align-items:flex-end; }
+.mrow.theirs .mbody { align-items:flex-start; }
+
+.mwho { font-size:10px; color:#aaa; margin-bottom:3px; }
+
+.bbl {
+  display:inline-block;       /* shrink-wrap to text width */
+  padding:10px 14px;
+  border-radius:18px;
+  font-size:14px;
+  line-height:1.5;
+  word-break:break-word;
+  white-space:pre-wrap;       /* respect newlines but wrap normally */
+}
+.mrow.theirs .bbl {
+  background:white;
+  color:#222;
+  border-bottom-left-radius:4px;
+  box-shadow:0 1px 4px rgba(0,0,0,0.07);
+}
+.mrow.mine .bbl {
+  background:#3a8dde;
+  color:white;
+  border-bottom-right-radius:4px;
+}
+.mtime { font-size:10px; color:#bbb; margin-top:4px; }
+
+/* quick reply chips */
 .chips { display:flex; gap:7px; flex-wrap:wrap; padding:10px 16px 6px; border-top:1px solid #f0f4f9; flex-shrink:0; background:white; }
 .chip { padding:6px 12px; background:#eef3f9; border:none; border-radius:20px; font-size:12px; font-weight:700; color:#3a8dde; cursor:pointer; font-family:'Nunito',sans-serif; transition:background 0.2s; white-space:nowrap; }
 .chip:hover { background:#d9eaf8; }
-.cinput-row { display:flex; align-items:center; gap:8px; padding:10px 16px 14px; border-top:1px solid #f0f4f9; flex-shrink:0; background:white; }
+
+/* input row */
+.cinput-row { display:flex; align-items:center; gap:8px; padding:10px 16px 18px; border-top:1px solid #f0f4f9; flex-shrink:0; background:white; }
 .cinput-row input { flex:1; padding:10px 14px; border-radius:20px; border:1.5px solid #e0eaf5; font-family:'Nunito',sans-serif; font-size:14px; background:#f8fbff; outline:none; transition:border 0.2s; }
 .cinput-row input:focus { border-color:#3a8dde; }
 .sbtn { width:40px; height:40px; background:#3a8dde; border:none; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; }
 .sbtn:hover { background:#2a7bd0; }
 .sbtn svg { width:18px; height:18px; stroke:white; fill:none; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; }
 
+/* ── TOAST ── */
 .toast { position:fixed; bottom:90px; left:50%; transform:translateX(-50%); background:#222; color:white; padding:10px 20px; border-radius:20px; font-size:13px; font-weight:600; z-index:9999; opacity:0; transition:opacity 0.3s; pointer-events:none; white-space:nowrap; }
 .toast.show { opacity:1; }
 
+/* ── LOADING ── */
 #loadingScreen { position:fixed; top:0; left:0; width:100%; height:100%; background:#f2f6fc; display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:99999; }
 #loadingScreen h2 { color:#3a8dde; font-size:20px; font-weight:800; margin-bottom:10px; }
 #loadingScreen p { color:#888; font-size:13px; }
@@ -169,7 +265,6 @@ body { background:#f2f6fc; padding-bottom:80px; }
 </head>
 <body>
 
-<!-- Loading screen shown until Firebase is ready -->
 <div id="loadingScreen">
   <div class="spin"></div>
   <h2>Educators Exchange</h2>
@@ -178,6 +273,19 @@ body { background:#f2f6fc; padding-bottom:80px; }
 
 <!-- HEADER -->
 <div class="header">
+  <!-- LOGO — open book SVG -->
+  <div class="logo-wrap">
+    <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- book left page -->
+      <path d="M20 32 C20 32 8 28 6 12 L6 10 C6 9 7 8 8 8.5 C12 10 18 13 20 18 L20 32Z" fill="#3a8dde" opacity="0.85"/>
+      <!-- book right page -->
+      <path d="M20 32 C20 32 32 28 34 12 L34 10 C34 9 33 8 32 8.5 C28 10 22 13 20 18 L20 32Z" fill="#5ba8f5" opacity="0.85"/>
+      <!-- spine line -->
+      <line x1="20" y1="18" x2="20" y2="32" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+      <!-- star -->
+      <path d="M20 5 L21.2 8.5 L25 8.5 L22 10.7 L23.1 14 L20 12 L16.9 14 L18 10.7 L15 8.5 L18.8 8.5 Z" fill="#FFD700"/>
+    </svg>
+  </div>
   <h1>Educators Exchange</h1>
   <button class="help-btn" id="helpBtnTop">Help</button>
 </div>
@@ -269,7 +377,7 @@ body { background:#f2f6fc; padding-bottom:80px; }
     <div class="help-item"><span class="hi">&#10133;</span><div><strong>Posting</strong>Tap + or Post. You need to be logged in.</div></div>
     <div class="help-item"><span class="hi">&#128172;</span><div><strong>Make a Deal</strong>Tap "Make a Deal" on any listing to chat with the seller.</div></div>
     <div class="help-item"><span class="hi">&#128100;</span><div><strong>Profile</strong>See your listings and delete ones you no longer want.</div></div>
-    <div class="help-item"><span class="hi">&#128231;</span><div><strong>Help</strong>Contact help@educatorsexchange.com</div></div>
+    <div class="help-item"><span class="hi">&#128231;</span><div><strong>Help</strong>Contact <a href="mailto:henryclement882@gmail.com" style="color:#3a8dde">henryclement882@gmail.com</a></div></div>
     <div class="row-btns" style="margin-top:16px">
       <button class="btn-blue" id="closeHelpOk">Got it!</button>
     </div>
@@ -322,8 +430,8 @@ body { background:#f2f6fc; padding-bottom:80px; }
   </div>
 </div>
 
-<!-- CHAT MODAL -->
-<div class="modal" id="chatModal">
+<!-- CHAT — FULLSCREEN (no overlay wrapper needed, it IS fullscreen) -->
+<div id="chatModal">
   <div class="cbox">
     <div class="chdr">
       <button class="back-btn" id="closeChat"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Back</button>
@@ -345,48 +453,34 @@ body { background:#f2f6fc; padding-bottom:80px; }
   </div>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <script>
-// ═══════════════════════════════════════════════════
-//  Wait for Firebase SDKs to be available, then init
-//  (updated: calls init even on timeout and passes a flag
-//   so the UI still wires up when Firebase can't load)
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════
+//  WAIT FOR FIREBASE THEN BOOT
+// ═══════════════════════════════════════
 function waitForFirebase(cb) {
   var start = Date.now();
-  var interval = setInterval(function() {
+  var iv = setInterval(function() {
     if (window.firebase && typeof window.firebase.initializeApp === "function") {
-      clearInterval(interval);
-      try { cb(true); } catch (e) { console.error("init error:", e); }
-      return;
+      clearInterval(iv); cb(true); return;
     }
     if (Date.now() - start > 10000) {
-      clearInterval(interval);
-      var ls = document.getElementById("loadingScreen");
-      if (ls) ls.style.display = "none";
-      console.error("Firebase SDK failed to load within 10s. Continuing without Firebase.");
-      var t = document.getElementById("toast");
-      if (t) {
-        t.textContent = "Firebase not available — core features disabled. See console (F12).";
-        t.classList.add("show");
-        setTimeout(function() { t.classList.remove("show"); }, 5000);
-      }
-      try { cb(false); } catch (e) { console.error("init error (timeout):", e); }
+      clearInterval(iv);
+      document.getElementById("loadingScreen").style.display = "none";
+      cb(false);
     }
-  }, 150);
+  }, 100);
 }
 
-waitForFirebase(function(firebaseAvailable) {
+waitForFirebase(function(ok) {
 
-  // ── INIT ──
-  var auth = null;
-  var db   = null;
+  var auth = null, db = null;
 
-  if (firebaseAvailable) {
+  if (ok) {
     try {
-      firebase.initializeApp({
+      // avoid "already initialized" error if page hot-reloads
+      var app = firebase.apps.length ? firebase.apps[0] : firebase.initializeApp({
         apiKey:            "AIzaSyB7ExJSuFpqG9nT-_ZgSP7vMmRiiOqyCWk",
         authDomain:        "educators-exchange.firebaseapp.com",
         databaseURL:       "https://educators-exchange-default-rtdb.firebaseio.com",
@@ -397,195 +491,133 @@ waitForFirebase(function(firebaseAvailable) {
       });
       auth = firebase.auth();
       db   = firebase.database();
-    } catch (err) {
-      console.error("Firebase init error:", err);
-      firebaseAvailable = false;
-    }
+    } catch(e) { console.error("Firebase init:", e); ok = false; }
   }
 
-  // If Firebase is not available, provide minimal stubs so UI still works
-  if (!firebaseAvailable) {
-    auth = {
-      _cb: null,
-      onAuthStateChanged: function(cb) { this._cb = cb; setTimeout(function(){ cb(null); },0); },
-      signInWithEmailAndPassword: function() { return Promise.reject({ message: "Firebase not available" }); },
-      createUserWithEmailAndPassword: function() { return Promise.reject({ message: "Firebase not available" }); },
-      signOut: function() { return Promise.resolve(); }
-    };
-    db = {
-      ref: function() {
-        return {
-          on: function() {},
-          off: function() {},
-          once: function() { return Promise.resolve({ exists: function(){ return false; } }); },
-          push: function() { return Promise.reject({ message: "Firebase not available" }); },
-          set: function() { return Promise.reject({ message: "Firebase not available" }); },
-          update: function() { return Promise.reject({ message: "Firebase not available" }); },
-          remove: function() { return Promise.reject({ message: "Firebase not available" }); }
-        };
-      }
-    };
-  }
-
-  // Hide loading screen
-  var lsElm = document.getElementById("loadingScreen");
-  if (lsElm) lsElm.style.display = "none";
+  document.getElementById("loadingScreen").style.display = "none";
 
   // ── STATE ──
-  var currentUser     = null;
-  var currentCat      = "all";
-  var currentPhoto    = null;
-  var allItems        = [];
-  var authMode        = "login";
-  var activeChatId    = null;
-  var chatRef         = null;
-  var conversations   = [];
+  var currentUser   = null;
+  var currentCat    = "all";
+  var currentPhoto  = null;
+  var allItems      = [];
+  var authMode      = "login";
+  var activeChatId  = null;
+  var chatRef       = null;
+  var conversations = [];
 
   // ── TOAST ──
   function toast(msg) {
     var t = document.getElementById("toast");
-    if (!t) return;
-    t.textContent = msg;
-    t.classList.add("show");
-    setTimeout(function() { t.classList.remove("show"); }, 2800);
+    t.textContent = msg; t.classList.add("show");
+    setTimeout(function(){ t.classList.remove("show"); }, 2800);
   }
 
   // ── MODAL HELPERS ──
-  function openM(id)  { var e=document.getElementById(id); if(e) e.classList.add("open"); }
-  function closeM(id) { var e=document.getElementById(id); if(e) e.classList.remove("open"); }
+  function openM(id)  { var e = document.getElementById(id); if(e) e.classList.add("open"); }
+  function closeM(id) { var e = document.getElementById(id); if(e) e.classList.remove("open"); }
+  var bind = function(id, fn) { var e = document.getElementById(id); if(e) e.addEventListener("click", fn); };
 
-  // Close on backdrop click
+  // backdrop close (not for chat — it's fullscreen)
   ["postModal","helpModal","authModal","profileModal","inboxModal"].forEach(function(id) {
     var el = document.getElementById(id);
-    if (!el) return;
-    el.addEventListener("click", function(e) {
-      if (e.target.id === id) closeM(id);
-    });
+    if (el) el.addEventListener("click", function(e){ if(e.target.id===id) closeM(id); });
   });
 
-  // ── WIRE ALL BUTTONS ──
-  var bind = function(id, fn) { var el=document.getElementById(id); if(el) el.addEventListener("click", fn); };
+  // ── WIRE BUTTONS ──
+  bind("helpBtnTop",   function(){ openM("helpModal"); });
+  bind("closeHelp",    function(){ closeM("helpModal"); });
+  bind("closeHelpOk",  function(){ closeM("helpModal"); });
 
-  bind("helpBtnTop",  function() { openM("helpModal"); });
-  bind("closeHelp",   function() { closeM("helpModal"); });
-  bind("closeHelpOk", function() { closeM("helpModal"); });
+  bind("fabBtn",       openPostModal);
+  bind("closePost",    function(){ closeM("postModal"); });
+  bind("cancelPost",   function(){ closeM("postModal"); });
+  bind("submitPost",   submitPost);
 
-  bind("fabBtn",      openPostModal);
-  bind("closePost",   function() { closeM("postModal"); });
-  bind("cancelPost",  function() { closeM("postModal"); });
-  bind("submitPost",  submitPost);
+  bind("tabLogin",     function(){ setAuthMode("login"); });
+  bind("tabSignup",    function(){ setAuthMode("signup"); });
+  bind("closeAuth",    function(){ closeM("authModal"); });
+  bind("cancelAuth",   function(){ closeM("authModal"); });
+  bind("submitAuth",   handleAuth);
 
-  bind("closeAuth",   function() { closeM("authModal"); });
-  bind("cancelAuth",  function() { closeM("authModal"); });
-  bind("submitAuth",  handleAuth);
-  bind("tabLogin",    function() { setAuthMode("login"); });
-  bind("tabSignup",   function() { setAuthMode("signup"); });
-
-  bind("closeProfile", function() { closeM("profileModal"); });
-  bind("closeInbox",   function() { closeM("inboxModal"); });
+  bind("closeProfile", function(){ closeM("profileModal"); });
+  bind("closeInbox",   function(){ closeM("inboxModal"); });
   bind("closeChat",    closeChat);
   bind("sendBtn",      sendMessage);
 
-  var chatInputEl = document.getElementById("chatInput");
-  if (chatInputEl) chatInputEl.addEventListener("keydown", function(e) { if (e.key === "Enter") sendMessage(); });
+  var ci = document.getElementById("chatInput");
+  if (ci) ci.addEventListener("keydown", function(e){ if(e.key==="Enter") sendMessage(); });
 
-  bind("navHome",    function() { render(); });
-  bind("navExplore", function() { toast("Explore coming soon!"); });
-  bind("navPost",    openPostModal);
-  bind("navMessages",openInbox);
-  bind("navProfile", openProfile);
+  bind("navHome",     function(){ render(); });
+  bind("navExplore",  function(){ toast("Explore coming soon!"); });
+  bind("navPost",     openPostModal);
+  bind("navMessages", openInbox);
+  bind("navProfile",  openProfile);
 
-  // Categories
-  document.querySelectorAll(".cat").forEach(function(el) {
-    el.addEventListener("click", function() {
+  document.querySelectorAll(".cat").forEach(function(el){
+    el.addEventListener("click", function(){
       currentCat = el.dataset.cat;
-      document.querySelectorAll(".cat").forEach(function(c) { c.classList.remove("active"); });
-      el.classList.add("active");
-      render();
+      document.querySelectorAll(".cat").forEach(function(c){ c.classList.remove("active"); });
+      el.classList.add("active"); render();
     });
   });
 
-  // Search
-  var searchEl = document.getElementById("search");
-  if (searchEl) searchEl.addEventListener("input", render);
+  document.getElementById("search").addEventListener("input", render);
 
-  // Photo input
-  var photoIn = document.getElementById("photoInput");
-  if (photoIn) photoIn.addEventListener("change", function(e) {
-    var file = e.target.files[0];
-    if (!file) return;
+  document.getElementById("photoInput").addEventListener("change", function(e){
+    var file = e.target.files[0]; if(!file) return;
     var reader = new FileReader();
-    reader.onload = function(ev) {
+    reader.onload = function(ev){
       var img = new Image();
-      img.onload = function() {
+      img.onload = function(){
         var canvas = document.createElement("canvas");
-        var MAX = 600, w = img.width, h = img.height;
-        if (w > MAX) { h = h * MAX / w; w = MAX; }
-        if (h > MAX) { w = w * MAX / h; h = MAX; }
-        canvas.width = w; canvas.height = h;
-        canvas.getContext("2d").drawImage(img, 0, 0, w, h);
-        currentPhoto = canvas.toDataURL("image/jpeg", 0.7);
-        var p = document.getElementById("photoPreview");
-        if (p) { p.src = currentPhoto; p.style.display = "block"; }
+        var MAX=600, w=img.width, h=img.height;
+        if(w>MAX){h=h*MAX/w;w=MAX;} if(h>MAX){w=w*MAX/h;h=MAX;}
+        canvas.width=w; canvas.height=h;
+        canvas.getContext("2d").drawImage(img,0,0,w,h);
+        currentPhoto = canvas.toDataURL("image/jpeg",0.7);
+        var p=document.getElementById("photoPreview"); p.src=currentPhoto; p.style.display="block";
       };
-      img.src = ev.target.result;
+      img.src=ev.target.result;
     };
     reader.readAsDataURL(file);
   });
 
   // ── AUTH STATE ──
-  if (auth && typeof auth.onAuthStateChanged === "function") {
-    auth.onAuthStateChanged(function(user) {
-      currentUser = user;
-      render();
-      if (user && typeof listenInbox === "function") listenInbox();
+  if (auth) {
+    auth.onAuthStateChanged(function(user){
+      currentUser = user; render();
+      if(user) listenInbox();
     });
-  } else {
-    currentUser = null;
-    render();
   }
 
-  // ── RENDER ──
+  // ── RENDER CARDS ──
   function render() {
-    var grid   = document.getElementById("items");
-    if (!grid) return;
-    var search = (document.getElementById("search") && document.getElementById("search").value.toLowerCase()) || "";
-    var filtered = allItems.filter(function(item) {
-      return (currentCat === "all" || item.category === currentCat) &&
+    var grid = document.getElementById("items");
+    var search = document.getElementById("search").value.toLowerCase();
+    var filtered = allItems.filter(function(item){
+      return (currentCat==="all" || item.category===currentCat) &&
              item.title.toLowerCase().includes(search);
     });
-
-    if (filtered.length === 0) {
-      grid.style.display = "block";
-      grid.innerHTML = "<p style='text-align:center;color:#bbb;font-size:14px;padding:40px 0'>No items yet. Be the first to post!</p>";
+    if(filtered.length===0){
+      grid.style.display="block";
+      grid.innerHTML="<p style='text-align:center;color:#bbb;font-size:14px;padding:40px 0'>No items yet. Be the first to post!</p>";
       return;
     }
-    grid.style.display = "grid";
-    grid.innerHTML = "";
-
-    filtered.forEach(function(item) {
-      var imgSrc  = item.photo || "https://placehold.co/200x130/eef3f9/3a8dde?text=No+Photo";
-      var isOwner = currentUser && currentUser.uid === item.uid;
-      var card    = document.createElement("div");
-      card.className = "card";
-      card.innerHTML =
-        "<img src='" + imgSrc + "' alt='" + item.title + "'>" +
-        "<h3>" + item.title + "</h3>" +
-        "<p class='price'>$" + item.price + "</p>" +
-        "<p class='card-meta'>" + (item.postedBy || "Anonymous") + "</p>";
-
-      if (isOwner) {
-        var db_btn = document.createElement("button");
-        db_btn.className = "delete-btn"; db_btn.title = "Delete"; db_btn.innerHTML = "&#x2715;";
-        db_btn.addEventListener("click", (function(id) { return function() { deleteItem(id); }; })(item.id));
-        card.appendChild(db_btn);
-        var ob = document.createElement("button");
-        ob.className = "own-btn"; ob.textContent = "Your Listing";
-        card.appendChild(ob);
+    grid.style.display="grid"; grid.innerHTML="";
+    filtered.forEach(function(item){
+      var imgSrc  = item.photo||"https://placehold.co/200x130/eef3f9/3a8dde?text=No+Photo";
+      var isOwner = currentUser && currentUser.uid===item.uid;
+      var card    = document.createElement("div"); card.className="card";
+      card.innerHTML = "<img src='"+imgSrc+"' alt='"+item.title+"'><h3>"+item.title+"</h3><p class='price'>$"+item.price+"</p><p class='card-meta'>"+(item.postedBy||"Anonymous")+"</p>";
+      if(isOwner){
+        var d=document.createElement("button"); d.className="delete-btn"; d.title="Delete"; d.innerHTML="&#x2715;";
+        d.addEventListener("click",(function(id){return function(){deleteItem(id);};})(item.id));
+        card.appendChild(d);
+        var o=document.createElement("button"); o.className="own-btn"; o.textContent="Your Listing"; card.appendChild(o);
       } else {
-        var deal = document.createElement("button");
-        deal.className = "deal-btn"; deal.innerHTML = "&#x1F4AC; Make a Deal";
-        deal.addEventListener("click", (function(id) { return function() { startDeal(id); }; })(item.id));
+        var deal=document.createElement("button"); deal.className="deal-btn"; deal.innerHTML="&#x1F4AC; Make a Deal";
+        deal.addEventListener("click",(function(id){return function(){startDeal(id);};})(item.id));
         card.appendChild(deal);
       }
       grid.appendChild(card);
@@ -593,295 +625,283 @@ waitForFirebase(function(firebaseAvailable) {
   }
 
   // ── LIVE ITEMS ──
-  try {
-    if (db && typeof db.ref === "function") {
-      db.ref("items").on("value", function(snap) {
-        allItems = [];
-        if (snap && snap.exists && snap.exists()) {
-          snap.forEach && snap.forEach(function(child) { allItems.unshift(Object.assign({ id: child.key }, child.val())); });
-        }
-        render();
-      });
-    }
-  } catch (e) {
-    console.error("items listener error:", e);
+  if(db) {
+    db.ref("items").on("value", function(snap){
+      allItems=[];
+      if(snap.exists()) snap.forEach(function(c){ allItems.unshift(Object.assign({id:c.key},c.val())); });
+      render();
+    });
   }
 
   // ── POST MODAL ──
-  function openPostModal() {
-    var t=document.getElementById("titleIn"); if(t) t.value = "";
-    var p=document.getElementById("priceIn"); if(p) p.value = "";
-    var pp=document.getElementById("photoPreview"); if(pp) pp.style.display = "none";
-    var pi=document.getElementById("photoInput"); if(pi) pi.value = "";
-    currentPhoto = null;
-    openM("postModal");
+  function openPostModal(){
+    document.getElementById("titleIn").value="";
+    document.getElementById("priceIn").value="";
+    document.getElementById("photoPreview").style.display="none";
+    document.getElementById("photoInput").value="";
+    currentPhoto=null; openM("postModal");
   }
 
-  function submitPost() {
-    if (!currentUser) { closeM("postModal"); openM("authModal"); toast("Please log in to post."); return; }
-    var title = (document.getElementById("titleIn") && document.getElementById("titleIn").value.trim()) || "";
-    var price = (document.getElementById("priceIn") && document.getElementById("priceIn").value.trim()) || "";
-    var cat   = (document.getElementById("catIn") && document.getElementById("catIn").value) || "setup";
-    if (!title || !price) { toast("Please fill in title and price."); return; }
-    var btn = document.getElementById("submitPost");
-    if (btn) { btn.disabled = true; btn.textContent = "Posting..."; }
-    if (!db || !db.ref) {
-      toast("Cannot post: backend not available.");
-      if (btn) { btn.disabled = false; btn.textContent = "Post"; }
-      return;
-    }
+  function submitPost(){
+    if(!currentUser){ closeM("postModal"); openM("authModal"); toast("Please log in to post."); return; }
+    var title=document.getElementById("titleIn").value.trim();
+    var price=document.getElementById("priceIn").value.trim();
+    var cat=document.getElementById("catIn").value;
+    if(!title||!price){ toast("Please fill in title and price."); return; }
+    var btn=document.getElementById("submitPost"); btn.disabled=true; btn.textContent="Posting...";
     db.ref("items").push({
-      title: title, price: price, category: cat,
-      photo: currentPhoto || null,
-      uid: currentUser.uid,
-      postedBy: currentUser.displayName || currentUser.email,
-      createdAt: Date.now()
-    }).then(function() {
-      toast("Item posted! ✓"); closeM("postModal");
-    }).catch(function(err) { toast("Error: " + (err && err.message ? err.message : err)); })
-      .finally(function(){ if (btn) { btn.disabled = false; btn.textContent = "Post"; } });
+      title:title, price:price, category:cat,
+      photo:currentPhoto||null,
+      uid:currentUser.uid,
+      postedBy:currentUser.displayName||currentUser.email,
+      createdAt:Date.now()
+    }).then(function(){ toast("Item posted! ✓"); closeM("postModal"); })
+      .catch(function(err){ toast("Error: "+err.message); })
+      .finally(function(){ btn.disabled=false; btn.textContent="Post"; });
   }
 
   // ── DELETE ──
-  function deleteItem(id) {
-    if (!confirm("Delete this item?")) return;
-    if (!db || !db.ref) { toast("Cannot delete: backend not available."); return; }
-    db.ref("items/" + id).remove()
-      .then(function() {
+  function deleteItem(id){
+    if(!confirm("Delete this item?")) return;
+    db.ref("items/"+id).remove()
+      .then(function(){
         toast("Deleted.");
-        if (document.getElementById("profileModal").classList.contains("open")) renderProfile();
+        if(document.getElementById("profileModal").classList.contains("open")) renderProfile();
       })
-      .catch(function(err) { toast("Error: " + (err && err.message ? err.message : err)); });
+      .catch(function(err){ toast("Error: "+err.message); });
   }
 
   // ── AUTH ──
-  function setAuthMode(mode) {
-    authMode = mode;
-    var t=document.getElementById("tabLogin"), s=document.getElementById("tabSignup");
-    if(t) t.classList.toggle("active", mode === "login");
-    if(s) s.classList.toggle("active", mode === "signup");
-    var sa = document.getElementById("submitAuth");
-    if (sa) sa.textContent = mode === "login" ? "Log In" : "Sign Up";
-    var nr = document.getElementById("nameRow");
-    if (nr) nr.style.display  = mode === "signup" ? "block" : "none";
-    var ae = document.getElementById("authErr"); if(ae) ae.classList.remove("show");
+  function setAuthMode(mode){
+    authMode=mode;
+    document.getElementById("tabLogin") .classList.toggle("active", mode==="login");
+    document.getElementById("tabSignup").classList.toggle("active", mode==="signup");
+    document.getElementById("submitAuth").textContent = mode==="login"?"Log In":"Sign Up";
+    document.getElementById("nameRow").style.display  = mode==="signup"?"block":"none";
+    document.getElementById("authErr").classList.remove("show");
   }
 
-  function handleAuth() {
-    var email = (document.getElementById("authEmail") && document.getElementById("authEmail").value.trim()) || "";
-    var pass  = (document.getElementById("authPass") && document.getElementById("authPass").value) || "";
-    var name  = (document.getElementById("authName") && document.getElementById("authName").value.trim()) || "";
-    var err   = document.getElementById("authErr");
+  function handleAuth(){
+    var email = document.getElementById("authEmail").value.trim();
+    var pass  = document.getElementById("authPass").value;
+    var name  = document.getElementById("authName").value.trim();
+    var errEl = document.getElementById("authErr");
     var btn   = document.getElementById("submitAuth");
-    if (err) err.classList.remove("show");
-    if (!email || !pass) { if (err) { err.textContent = "Please enter email and password."; err.classList.add("show"); } return; }
-    if (authMode === "signup" && !name) { if (err) { err.textContent = "Please enter your name."; err.classList.add("show"); } return; }
-    if (btn) { btn.disabled = true; btn.textContent = authMode === "login" ? "Logging in..." : "Creating..."; }
+    errEl.classList.remove("show");
 
-    var p = authMode === "login"
-      ? (auth.signInWithEmailAndPassword ? auth.signInWithEmailAndPassword(email, pass) : Promise.reject({ message: "Auth not available" }))
-      : (auth.createUserWithEmailAndPassword ? auth.createUserWithEmailAndPassword(email, pass).then(function(cred) {
-          return cred.user.updateProfile({ displayName: name }).then(function() { return cred; });
-        }) : Promise.reject({ message: "Auth not available" }));
+    if(!email||!pass){ errEl.textContent="Please enter email and password."; errEl.classList.add("show"); return; }
+    if(authMode==="signup"&&!name){ errEl.textContent="Please enter your name."; errEl.classList.add("show"); return; }
 
-    p.then(function() {
-      toast(authMode === "login" ? "Welcome back! ✓" : "Welcome, " + name + "! ✓");
-      closeM("authModal");
-    }).catch(function(e) {
-      var msgs = {
-        "auth/user-not-found":       "No account with that email.",
-        "auth/wrong-password":       "Incorrect password.",
-        "auth/email-already-in-use": "Email already registered.",
-        "auth/weak-password":        "Password needs 6+ characters.",
-        "auth/invalid-email":        "Enter a valid email.",
-        "auth/invalid-credential":   "Incorrect email or password."
-      };
-      if (err) { err.textContent = msgs[e.code] || e.message || e; err.classList.add("show"); }
-    }).finally(function() {
-      if (btn) { btn.disabled = false; btn.textContent = authMode === "login" ? "Log In" : "Sign Up"; }
-    });
+    btn.disabled=true; btn.textContent=authMode==="login"?"Logging in...":"Creating...";
+
+    var promise;
+    if(authMode==="login"){
+      // ── LOGIN FIX: use signInWithEmailAndPassword directly ──
+      promise = auth.signInWithEmailAndPassword(email, pass);
+    } else {
+      promise = auth.createUserWithEmailAndPassword(email, pass)
+        .then(function(cred){
+          return cred.user.updateProfile({displayName:name}).then(function(){ return cred; });
+        });
+    }
+
+    promise
+      .then(function(){
+        // reload user so displayName is fresh
+        return auth.currentUser ? auth.currentUser.reload() : Promise.resolve();
+      })
+      .then(function(){
+        toast(authMode==="login" ? "Welcome back! ✓" : "Welcome, "+name+"! ✓");
+        closeM("authModal");
+      })
+      .catch(function(e){
+        var msgs = {
+          "auth/user-not-found":       "No account found with that email.",
+          "auth/wrong-password":       "Incorrect password. Please try again.",
+          "auth/email-already-in-use": "That email is already registered.",
+          "auth/weak-password":        "Password needs at least 6 characters.",
+          "auth/invalid-email":        "Please enter a valid email address.",
+          "auth/invalid-credential":   "Incorrect email or password. Please try again.",
+          "auth/too-many-requests":    "Too many attempts. Please wait a moment and try again.",
+          "auth/network-request-failed": "Network error. Check your internet connection."
+        };
+        errEl.textContent = msgs[e.code] || e.message;
+        errEl.classList.add("show");
+      })
+      .finally(function(){ btn.disabled=false; btn.textContent=authMode==="login"?"Log In":"Sign Up"; });
   }
 
   // ── PROFILE ──
-  function openProfile() { renderProfile(); openM("profileModal"); }
+  function openProfile(){ renderProfile(); openM("profileModal"); }
 
-  function renderProfile() {
-    var body = document.getElementById("profileBody");
-    if (!body) return;
-    if (!currentUser) {
-      body.innerHTML = "<p style='text-align:center;color:#888;font-size:14px;margin-bottom:18px;line-height:1.6'>Log in to view your profile and manage your listings.</p><button class='btn-blue' style='width:100%' id='pLoginBtn'>Log In / Sign Up</button>";
-      var btn = document.getElementById("pLoginBtn");
-      if (btn) btn.addEventListener("click", function() { closeM("profileModal"); openM("authModal"); });
+  function renderProfile(){
+    var body=document.getElementById("profileBody");
+    if(!currentUser){
+      body.innerHTML="<p style='text-align:center;color:#888;font-size:14px;margin-bottom:18px;line-height:1.6'>Log in to view your profile and manage your listings.</p><button class='btn-blue' style='width:100%' id='pLoginBtn'>Log In / Sign Up</button>";
+      document.getElementById("pLoginBtn").addEventListener("click",function(){ closeM("profileModal"); openM("authModal"); });
       return;
     }
-    var name = currentUser.displayName || currentUser.email;
-    var initials = (name || "").slice(0,2).toUpperCase();
-    var myItems  = allItems.filter(function(i) { return i.uid === currentUser.uid; });
-    var itemsHTML = myItems.length === 0
+    var name=currentUser.displayName||currentUser.email;
+    var initials=(name||"").slice(0,2).toUpperCase();
+    var myItems=allItems.filter(function(i){ return i.uid===currentUser.uid; });
+    var itemsHTML=myItems.length===0
       ? "<p style='color:#bbb;font-size:13px;text-align:center;padding:14px 0'>No listings yet.</p>"
-      : myItems.map(function(item) {
-          return "<div class='p-item'>" +
-            "<img src='" + (item.photo || "https://placehold.co/50x50/eef3f9/3a8dde?text=?") + "'>" +
-            "<div class='p-info'><div class='p-title'>" + item.title + "</div><div class='p-price'>$" + item.price + "</div></div>" +
-            "<button class='p-del' data-id='" + item.id + "'>Delete</button></div>";
+      : myItems.map(function(item){
+          return "<div class='p-item'><img src='"+(item.photo||"https://placehold.co/50x50/eef3f9/3a8dde?text=?")+"'><div class='p-info'><div class='p-title'>"+item.title+"</div><div class='p-price'>$"+item.price+"</div></div><button class='p-del' data-id='"+item.id+"'>Delete</button></div>";
         }).join("");
-    body.innerHTML =
-      "<div class='p-avatar'>" + initials + "</div>" +
-      "<div class='p-name'>" + name + "</div>" +
-      "<div class='p-email'>" + (currentUser.email || "") + "</div>" +
-      "<div class='p-stats'><div class='stat'><div class='stat-n'>" + myItems.length + "</div><div class='stat-l'>My Posts</div></div></div>" +
-      "<hr class='p-div'><div class='p-sec'>My Listings</div>" + itemsHTML +
+    body.innerHTML=
+      "<div class='p-avatar'>"+initials+"</div>"+
+      "<div class='p-name'>"+name+"</div>"+
+      "<div class='p-email'>"+currentUser.email+"</div>"+
+      "<div class='p-stats'><div class='stat'><div class='stat-n'>"+myItems.length+"</div><div class='stat-l'>My Posts</div></div></div>"+
+      "<hr class='p-div'><div class='p-sec'>My Listings</div>"+itemsHTML+
       "<button class='btn-red' id='logoutBtn'>Log Out</button>";
-    body.querySelectorAll(".p-del").forEach(function(btn) {
-      btn.addEventListener("click", function() { deleteItem(btn.dataset.id); });
+    body.querySelectorAll(".p-del").forEach(function(b){
+      b.addEventListener("click",function(){ deleteItem(b.dataset.id); });
     });
-    var logoutBtn = document.getElementById("logoutBtn");
-    if (logoutBtn) logoutBtn.addEventListener("click", function() {
-      if (!auth || !auth.signOut) { toast("Cannot log out (no auth)."); closeM("profileModal"); return; }
-      auth.signOut().then(function() { toast("Logged out."); closeM("profileModal"); }).catch(function(){ toast("Error logging out."); });
+    document.getElementById("logoutBtn").addEventListener("click",function(){
+      auth.signOut().then(function(){ toast("Logged out."); closeM("profileModal"); });
     });
   }
 
   // ── START DEAL ──
-  function startDeal(itemId) {
-    if (!currentUser) { openM("authModal"); toast("Please log in to message."); return; }
-    var item = allItems.find(function(i) { return i.id === itemId; });
-    if (!item) return;
-    if (item.uid === currentUser.uid) { toast("That's your own listing!"); return; }
-    if (!db || !db.ref) { toast("Messaging not available (backend down)."); return; }
-    var chatId = [currentUser.uid, item.uid].sort().join("_") + "_" + itemId;
-    db.ref("chats/" + chatId + "/meta").set({
-      itemId: itemId, itemTitle: item.title, itemPrice: item.price,
-      itemPhoto: item.photo || null, sellerId: item.uid,
-      sellerName: item.postedBy || "Seller",
-      buyerId: currentUser.uid,
-      buyerName: currentUser.displayName || currentUser.email,
-      updatedAt: Date.now()
-    }).then(function() { openChat(chatId, item); }).catch(function(e){ toast("Cannot create chat: " + (e && e.message ? e.message : e)); });
+  function startDeal(itemId){
+    if(!currentUser){ openM("authModal"); toast("Please log in to message."); return; }
+    var item=allItems.find(function(i){ return i.id===itemId; });
+    if(!item) return;
+    if(item.uid===currentUser.uid){ toast("That's your own listing!"); return; }
+    var chatId=[currentUser.uid,item.uid].sort().join("_")+"_"+itemId;
+    db.ref("chats/"+chatId+"/meta").set({
+      itemId:itemId, itemTitle:item.title, itemPrice:item.price,
+      itemPhoto:item.photo||null, sellerId:item.uid,
+      sellerName:item.postedBy||"Seller",
+      buyerId:currentUser.uid,
+      buyerName:currentUser.displayName||currentUser.email,
+      updatedAt:Date.now()
+    }).then(function(){ openChat(chatId,item); });
   }
 
   // ── OPEN CHAT ──
-  function openChat(chatId, item) {
-    activeChatId = chatId;
-    var isSeller  = currentUser && currentUser.uid === item.uid;
-    var otherName = isSeller ? (item.buyerName || "Buyer") : (item.postedBy || "Seller");
-    var av = document.getElementById("chatAv"); if (av) av.textContent   = (otherName||"??").slice(0,2).toUpperCase();
-    var cn = document.getElementById("chatName"); if (cn) cn.textContent = otherName;
-    var cs = document.getElementById("chatSub"); if (cs) cs.textContent  = "Re: " + item.title;
-    var img = item.photo || "https://placehold.co/44x44/eef3f9/3a8dde?text=?";
-    var cib = document.getElementById("chatItemBar");
-    if (cib) cib.innerHTML =
-      "<img src='" + img + "'><div><div class='cibar-t'>" + item.title + "</div><div class='cibar-p'>$" + item.price + "</div></div>";
-    var chipTexts = ["Hey! Is this still available?","Would you take a lower price?","Can I see more photos?","I'll take it! 👍","What condition is it in?"];
-    var chipsEl = document.getElementById("chatChips");
-    if (chipsEl) {
-      chipsEl.innerHTML = "";
-      chipTexts.forEach(function(text) {
-        var b = document.createElement("button"); b.className = "chip"; b.textContent = text;
-        b.addEventListener("click", function() { var ci=document.getElementById("chatInput"); if(ci) { ci.value = text; ci.focus(); } });
-        chipsEl.appendChild(b);
-      });
-    }
-    var msgsEl = document.getElementById("chatMsgs"); if (msgsEl) msgsEl.innerHTML = "";
-    var inputEl = document.getElementById("chatInput"); if (inputEl) inputEl.value = "";
+  function openChat(chatId, item){
+    activeChatId=chatId;
+    var isSeller=currentUser.uid===item.uid;
+    var otherName=isSeller?(item.buyerName||"Buyer"):(item.postedBy||"Seller");
+    document.getElementById("chatAv").textContent   = (otherName||"??").slice(0,2).toUpperCase();
+    document.getElementById("chatName").textContent = otherName;
+    document.getElementById("chatSub").textContent  = "Re: "+item.title;
+    var img=item.photo||"https://placehold.co/44x44/eef3f9/3a8dde?text=?";
+    document.getElementById("chatItemBar").innerHTML=
+      "<img src='"+img+"'><div><div class='cibar-t'>"+item.title+"</div><div class='cibar-p'>$"+item.price+"</div></div>";
+
+    var chipTexts=["Hey! Is this still available?","Would you take a lower price?","Can I see more photos?","I'll take it! 👍","What condition is it in?"];
+    var chipsEl=document.getElementById("chatChips"); chipsEl.innerHTML="";
+    chipTexts.forEach(function(text){
+      var b=document.createElement("button"); b.className="chip"; b.textContent=text;
+      b.addEventListener("click",function(){ document.getElementById("chatInput").value=text; document.getElementById("chatInput").focus(); });
+      chipsEl.appendChild(b);
+    });
+
+    document.getElementById("chatMsgs").innerHTML="";
+    document.getElementById("chatInput").value="";
     openM("chatModal");
-    if (!db || !db.ref) { toast("Chat history unavailable (backend down)."); return; }
-    if (chatRef && chatRef.off) chatRef.off();
-    chatRef = db.ref("chats/" + chatId + "/messages");
-    chatRef.on("value", function(snap) {
-      var box = document.getElementById("chatMsgs"); if (!box) return; box.innerHTML = "";
-      if (snap && snap.exists && snap.exists()) {
-        snap.forEach && snap.forEach(function(child) {
-          var m = child.val(), mine = m.uid === (currentUser && currentUser.uid);
-          var time = new Date(m.ts).toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});
-          var row = document.createElement("div"); row.className = "mrow " + (mine ? "mine" : "theirs");
-          row.innerHTML = "<div>" + (!mine ? "<div class='mwho'>" + (m.senderName||"") + "</div>" : "") + "<div class='bbl'>" + m.text + "</div></div><div class='mtime'>" + time + "</div>";
+
+    if(chatRef) chatRef.off();
+    chatRef=db.ref("chats/"+chatId+"/messages");
+    chatRef.on("value",function(snap){
+      var box=document.getElementById("chatMsgs"); box.innerHTML="";
+      if(snap.exists()){
+        snap.forEach(function(child){
+          var m=child.val(), mine=m.uid===currentUser.uid;
+          var time=new Date(m.ts).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
+          var row=document.createElement("div"); row.className="mrow "+(mine?"mine":"theirs");
+          // ── FIX: everything in one .mbody column, no side-by-side splitting ──
+          row.innerHTML=
+            "<div class='mbody'>"+
+              (!mine?"<div class='mwho'>"+(m.senderName||"")+"</div>":"")+
+              "<div class='bbl'>"+escHtml(m.text)+"</div>"+
+              "<div class='mtime'>"+time+"</div>"+
+            "</div>";
           box.appendChild(row);
         });
       }
-      box.scrollTop = box.scrollHeight;
+      box.scrollTop=box.scrollHeight;
     });
-    db.ref("chats/" + chatId + "/meta").update && db.ref("chats/" + chatId + "/meta").update({ ["unread_" + (currentUser && currentUser.uid)]: 0 });
+    db.ref("chats/"+chatId+"/meta").update({ ["unread_"+currentUser.uid]: 0 });
   }
 
-  function closeChat() {
-    if (chatRef && chatRef.off) { chatRef.off(); chatRef = null; }
-    activeChatId = null; closeM("chatModal");
+  function escHtml(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+  function closeChat(){
+    if(chatRef){ chatRef.off(); chatRef=null; }
+    activeChatId=null; closeM("chatModal");
   }
 
-  function sendMessage() {
-    if (!activeChatId || !currentUser) return;
-    var input = document.getElementById("chatInput");
-    if (!input) return;
-    var text = input.value.trim();
-    if (!text) return; input.value = "";
-    if (!db || !db.ref) { toast("Cannot send: backend not available."); return; }
-    db.ref("chats/" + activeChatId + "/messages").push({
-      text: text, uid: currentUser.uid,
-      senderName: currentUser.displayName || currentUser.email, ts: Date.now()
-    }).catch(function(e){ toast("Send failed: " + (e && e.message ? e.message : e)); });
-    db.ref("chats/" + activeChatId + "/meta").once("value").then(function(snap) {
-      if (!snap || !snap.exists || !snap.exists()) return;
-      var meta = snap.val(), otherId = meta.sellerId === currentUser.uid ? meta.buyerId : meta.sellerId;
-      var update = { lastMessage: text, updatedAt: Date.now() };
-      update["unread_" + otherId] = (meta["unread_" + otherId] || 0) + 1;
-      db.ref("chats/" + activeChatId + "/meta").update(update);
-    }).catch(function(){});
+  function sendMessage(){
+    if(!activeChatId||!currentUser) return;
+    var input=document.getElementById("chatInput"), text=input.value.trim();
+    if(!text) return; input.value="";
+    db.ref("chats/"+activeChatId+"/messages").push({
+      text:text, uid:currentUser.uid,
+      senderName:currentUser.displayName||currentUser.email, ts:Date.now()
+    });
+    db.ref("chats/"+activeChatId+"/meta").once("value").then(function(snap){
+      if(!snap.exists()) return;
+      var meta=snap.val(), otherId=meta.sellerId===currentUser.uid?meta.buyerId:meta.sellerId;
+      var upd={lastMessage:text, updatedAt:Date.now()};
+      upd["unread_"+otherId]=(meta["unread_"+otherId]||0)+1;
+      db.ref("chats/"+activeChatId+"/meta").update(upd);
+    });
   }
 
   // ── INBOX ──
-  function listenInbox() {
-    if (!db || !db.ref) return;
-    db.ref("chats").on("value", function(snap) {
-      conversations = []; var unread = 0;
-      if (snap && snap.exists && snap.exists()) {
-        snap.forEach && snap.forEach(function(child) {
-          var meta = child.val().meta; if (!meta) return;
-          if (meta.sellerId !== (currentUser && currentUser.uid) && meta.buyerId !== (currentUser && currentUser.uid)) return;
-          var u = meta["unread_" + (currentUser && currentUser.uid)] || 0; unread += u;
-          conversations.push(Object.assign({ id: child.key, unread: u }, meta));
+  function listenInbox(){
+    db.ref("chats").on("value",function(snap){
+      conversations=[]; var unread=0;
+      if(snap.exists()){
+        snap.forEach(function(child){
+          var meta=child.val().meta; if(!meta) return;
+          if(meta.sellerId!==currentUser.uid&&meta.buyerId!==currentUser.uid) return;
+          var u=meta["unread_"+currentUser.uid]||0; unread+=u;
+          conversations.push(Object.assign({id:child.key,unread:u},meta));
         });
       }
-      conversations.sort(function(a,b) { return (b.updatedAt||0)-(a.updatedAt||0); });
-      var badge = document.getElementById("inboxBadge");
-      if (badge) {
-        if (unread > 0) { badge.textContent = unread; badge.classList.add("show"); }
-        else badge.classList.remove("show");
-      }
-      if (document.getElementById("inboxModal").classList.contains("open")) renderInbox();
+      conversations.sort(function(a,b){return (b.updatedAt||0)-(a.updatedAt||0);});
+      var badge=document.getElementById("inboxBadge");
+      if(unread>0){badge.textContent=unread;badge.classList.add("show");}
+      else badge.classList.remove("show");
+      if(document.getElementById("inboxModal").classList.contains("open")) renderInbox();
     });
   }
 
-  function openInbox() { renderInbox(); openM("inboxModal"); }
+  function openInbox(){ renderInbox(); openM("inboxModal"); }
 
-  function renderInbox() {
-    var list = document.getElementById("inboxList");
-    if (!list) return;
-    if (!currentUser) { list.innerHTML = "<div class='iempty'>Log in to see your messages.</div>"; return; }
-    if (conversations.length === 0) { list.innerHTML = "<div class='iempty'>No messages yet.<br>Tap \"Make a Deal\" to start chatting!</div>"; return; }
-    list.innerHTML = "";
-    conversations.forEach(function(c) {
-      var isSeller = c.sellerId === (currentUser && currentUser.uid);
-      var other    = isSeller ? c.buyerName : c.sellerName;
-      var init     = (other || "?").slice(0,2).toUpperCase();
-      var row      = document.createElement("div"); row.className = "irow";
-      row.innerHTML = "<div class='iav'>" + init + "</div><div class='iinfo'><div class='iname'>" + (other||"User") + "</div><div class='iprev'>" + (c.lastMessage||"Conversation started") + "</div></div><div style='display:flex;flex-direction:column;align-items:flex-end;gap:5px'><div class='itime'>" + timeAgo(c.updatedAt) + "</div>" + (c.unread > 0 ? "<div class='udot'></div>" : "") + "</div>";
-      row.addEventListener("click", (function(conv) { return function() {
-        var fake = { id: conv.itemId, title: conv.itemTitle, price: conv.itemPrice, photo: conv.itemPhoto, uid: conv.sellerId, postedBy: conv.sellerName, buyerName: conv.buyerName };
-        closeM("inboxModal"); openChat(conv.id, fake);
-      }; })(c));
+  function renderInbox(){
+    var list=document.getElementById("inboxList");
+    if(!currentUser){ list.innerHTML="<div class='iempty'>Log in to see your messages.</div>"; return; }
+    if(conversations.length===0){ list.innerHTML="<div class='iempty'>No messages yet.<br>Tap \"Make a Deal\" to start chatting!</div>"; return; }
+    list.innerHTML="";
+    conversations.forEach(function(c){
+      var isSeller=c.sellerId===currentUser.uid;
+      var other=isSeller?c.buyerName:c.sellerName;
+      var init=(other||"?").slice(0,2).toUpperCase();
+      var row=document.createElement("div"); row.className="irow";
+      row.innerHTML="<div class='iav'>"+init+"</div><div class='iinfo'><div class='iname'>"+(other||"User")+"</div><div class='iprev'>"+(c.lastMessage||"Conversation started")+"</div></div><div style='display:flex;flex-direction:column;align-items:flex-end;gap:5px'><div class='itime'>"+timeAgo(c.updatedAt)+"</div>"+(c.unread>0?"<div class='udot'></div>":"")+"</div>";
+      row.addEventListener("click",(function(conv){ return function(){
+        var fake={id:conv.itemId,title:conv.itemTitle,price:conv.itemPrice,photo:conv.itemPhoto,uid:conv.sellerId,postedBy:conv.sellerName,buyerName:conv.buyerName};
+        closeM("inboxModal"); openChat(conv.id,fake);
+      };})(c));
       list.appendChild(row);
     });
   }
 
-  function timeAgo(ts) {
-    if (!ts) return "";
-    var s = Math.floor((Date.now()-ts)/1000);
-    if (s < 60) return "now"; if (s < 3600) return Math.floor(s/60)+"m";
-    if (s < 86400) return Math.floor(s/3600)+"h"; return Math.floor(s/86400)+"d";
+  function timeAgo(ts){
+    if(!ts) return "";
+    var s=Math.floor((Date.now()-ts)/1000);
+    if(s<60) return "now"; if(s<3600) return Math.floor(s/60)+"m";
+    if(s<86400) return Math.floor(s/3600)+"h"; return Math.floor(s/86400)+"d";
   }
 
 }); // end waitForFirebase
 </script>
 </body>
-</html>S
+</html>
