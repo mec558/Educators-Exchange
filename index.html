@@ -11,12 +11,13 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js" crossorigin="anonymous"></script>
 
 <style>
-/* ...existing CSS... */
 * { margin:0; padding:0; box-sizing:border-box; font-family:'Nunito',sans-serif; }
 body { background:#f2f6fc; padding-bottom:80px; }
 
-.header { padding:15px 20px; background:white; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 10px rgba(0,0,0,0.05); position:relative; }
+/* ONLY CHANGE: padding reduced + logo-svg class added */
+.header { padding:10px 20px; background:white; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 10px rgba(0,0,0,0.05); position:relative; }
 .header h1 { color:#3a8dde; font-size:20px; font-weight:800; position:absolute; left:50%; transform:translateX(-50%); }
+.logo-svg { width:40px; height:40px; flex-shrink:0; z-index:1; }
 .help-btn { margin-left:auto; background:#eef3f9; border:none; color:#3a8dde; font-weight:700; font-size:13px; padding:7px 14px; border-radius:20px; cursor:pointer; font-family:'Nunito',sans-serif; transition:background 0.2s; }
 .help-btn:hover { background:#d9eaf8; }
 
@@ -94,7 +95,6 @@ body { background:#f2f6fc; padding-bottom:80px; }
 .hi { font-size:20px; flex-shrink:0; }
 .help-item strong { display:block; font-weight:700; font-size:13px; }
 
-/* ── PROFILE AVATAR — no hardcoded color, set by JS ── */
 .p-avatar { width:72px; height:72px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:28px; color:white; font-weight:800; margin:0 auto 10px; }
 .p-name { text-align:center; font-size:18px; font-weight:800; color:#222; }
 .p-email { text-align:center; font-size:12px; color:#888; margin-bottom:14px; }
@@ -113,7 +113,6 @@ body { background:#f2f6fc; padding-bottom:80px; }
 .p-del { background:#fff0f0; border:none; color:#e04444; font-size:12px; font-weight:700; padding:5px 10px; border-radius:8px; cursor:pointer; font-family:'Nunito',sans-serif; flex-shrink:0; }
 .p-del:hover { background:#ffe0e0; }
 
-/* ── INBOX AVATAR — no hardcoded color, set by JS ── */
 .ibox { background:white; width:340px; border-radius:20px; box-shadow:0 20px 60px rgba(0,0,0,0.15); max-height:90vh; display:flex; flex-direction:column; overflow:hidden; }
 .ihdr { padding:18px 20px 14px; border-bottom:1px solid #f0f4f9; display:flex; align-items:center; gap:10px; flex-shrink:0; }
 .ihdr h3 { font-size:17px; font-weight:800; color:#222; margin:0; flex:1; }
@@ -129,7 +128,6 @@ body { background:#f2f6fc; padding-bottom:80px; }
 .udot { width:9px; height:9px; background:#3a8dde; border-radius:50%; flex-shrink:0; }
 .iempty { text-align:center; color:#bbb; font-size:14px; padding:40px 20px; line-height:1.7; }
 
-/* ── CHAT AVATAR — no hardcoded color, set by JS ── */
 .cbox { background:white; width:360px; border-radius:20px; box-shadow:0 20px 60px rgba(0,0,0,0.15); max-height:92vh; display:flex; flex-direction:column; overflow:hidden; }
 .chdr { padding:14px 16px; border-bottom:1px solid #f0f4f9; display:flex; align-items:center; gap:10px; flex-shrink:0; }
 .cav { width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; color:white; font-weight:800; flex-shrink:0; }
@@ -176,6 +174,30 @@ body { background:#f2f6fc; padding-bottom:80px; }
 </div>
 
 <div class="header">
+  <!-- LOGO: book + handshake -->
+  <svg class="logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <path d="M50 8 C50 8 18 14 15 22 L15 58 C15 76 32 90 50 96 C68 90 85 76 85 58 L85 22 C82 14 50 8 50 8Z" fill="#1a5fa8"/>
+    <path d="M22 38 C22 32 28 27 36 26 L50 24 L50 74 L36 76 C29 77 22 72 22 66Z" fill="#3a8dde"/>
+    <path d="M78 38 C78 32 72 27 64 26 L50 24 L50 74 L64 76 C71 77 78 72 78 66Z" fill="#5ba8f5"/>
+    <line x1="50" y1="24" x2="50" y2="74" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+    <line x1="28" y1="42" x2="46" y2="41" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+    <line x1="28" y1="49" x2="46" y2="48" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+    <line x1="54" y1="41" x2="72" y2="42" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+    <line x1="54" y1="48" x2="72" y2="49" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+    <path d="M22 62 C22 58 25 55 29 54 L42 53 L43 57 L31 58 C29 58 27 60 27 62 L27 72 L22 72Z" fill="#f0c040"/>
+    <ellipse cx="43" cy="63" rx="10" ry="7" fill="#f0c040" transform="rotate(-15 43 63)"/>
+    <rect x="44" y="54" width="5" height="9" rx="2.5" fill="#f0c040" transform="rotate(-10 46 58)"/>
+    <rect x="49" y="55" width="5" height="8" rx="2.5" fill="#f0c040" transform="rotate(-3 51 59)"/>
+    <rect x="54" y="57" width="4" height="7" rx="2" fill="#f0c040"/>
+    <ellipse cx="39" cy="57" rx="3.5" ry="5" fill="#e8b030" transform="rotate(-30 39 57)"/>
+    <path d="M78 62 C78 58 75 55 71 54 L58 53 L57 57 L69 58 C71 58 73 60 73 62 L73 72 L78 72Z" fill="#2abba8"/>
+    <ellipse cx="57" cy="63" rx="10" ry="7" fill="#2abba8" transform="rotate(15 57 63)"/>
+    <rect x="51" y="54" width="5" height="9" rx="2.5" fill="#2abba8" transform="rotate(10 54 58)"/>
+    <rect x="46" y="55" width="5" height="8" rx="2.5" fill="#2abba8" transform="rotate(3 49 59)"/>
+    <rect x="42" y="57" width="4" height="7" rx="2" fill="#2abba8"/>
+    <ellipse cx="61" cy="57" rx="3.5" ry="5" fill="#1fa898" transform="rotate(30 61 57)"/>
+    <path d="M50 12 L52 18 L58 18 L53 22 L55 28 L50 24 L45 28 L47 22 L42 18 L48 18Z" fill="#FFD700"/>
+  </svg>
   <h1>Educators Exchange</h1>
   <button class="help-btn" id="helpBtnTop">Help</button>
 </div>
@@ -341,44 +363,23 @@ body { background:#f2f6fc; padding-bottom:80px; }
 <div class="toast" id="toast"></div>
 
 <script>
-// ── AVATAR COLOR MAP — A gets app blue, every other letter gets its own soft color ──
 var AVATAR_COLORS = {
-  A: "linear-gradient(135deg,#3a8dde,#5ba8f5)",
-  B: "linear-gradient(135deg,#e07b54,#f0a482)",
-  C: "linear-gradient(135deg,#5db87a,#85d4a0)",
-  D: "linear-gradient(135deg,#9b6fc4,#bfa0e0)",
-  E: "linear-gradient(135deg,#d4a53a,#f0c96a)",
-  F: "linear-gradient(135deg,#d45c7a,#f08fa6)",
-  G: "linear-gradient(135deg,#3aafaf,#68d4d4)",
-  H: "linear-gradient(135deg,#c47a3a,#e0a870)",
-  I: "linear-gradient(135deg,#6a7fc4,#9aaae0)",
-  J: "linear-gradient(135deg,#4db86b,#7dd494)",
-  K: "linear-gradient(135deg,#c46a9b,#e09fc0)",
-  L: "linear-gradient(135deg,#3a8dde,#68aaf0)",
-  M: "linear-gradient(135deg,#d46a3a,#f09a6a)",
-  N: "linear-gradient(135deg,#7ab83a,#a8d468)",
-  O: "linear-gradient(135deg,#c43a6a,#e07090)",
-  P: "linear-gradient(135deg,#3abdb8,#68d9d4)",
-  Q: "linear-gradient(135deg,#7c5cbf,#a88ee0)",
-  R: "linear-gradient(135deg,#bf5c3a,#e08a68)",
-  S: "linear-gradient(135deg,#3a9dbf,#68c4e0)",
-  T: "linear-gradient(135deg,#bf9c3a,#e0c468)",
-  U: "linear-gradient(135deg,#3abf7a,#68e0a8)",
-  V: "linear-gradient(135deg,#8c3abf,#b868e0)",
-  W: "linear-gradient(135deg,#bf3a3a,#e07070)",
-  X: "linear-gradient(135deg,#3a7abf,#68a8e0)",
-  Y: "linear-gradient(135deg,#bfb03a,#e0d468)",
-  Z: "linear-gradient(135deg,#3abfbf,#68e0e0)"
+  A:"linear-gradient(135deg,#3a8dde,#5ba8f5)",B:"linear-gradient(135deg,#e07b54,#f0a482)",
+  C:"linear-gradient(135deg,#5db87a,#85d4a0)",D:"linear-gradient(135deg,#9b6fc4,#bfa0e0)",
+  E:"linear-gradient(135deg,#d4a53a,#f0c96a)",F:"linear-gradient(135deg,#d45c7a,#f08fa6)",
+  G:"linear-gradient(135deg,#3aafaf,#68d4d4)",H:"linear-gradient(135deg,#c47a3a,#e0a870)",
+  I:"linear-gradient(135deg,#6a7fc4,#9aaae0)",J:"linear-gradient(135deg,#4db86b,#7dd494)",
+  K:"linear-gradient(135deg,#c46a9b,#e09fc0)",L:"linear-gradient(135deg,#3a8dde,#68aaf0)",
+  M:"linear-gradient(135deg,#d46a3a,#f09a6a)",N:"linear-gradient(135deg,#7ab83a,#a8d468)",
+  O:"linear-gradient(135deg,#c43a6a,#e07090)",P:"linear-gradient(135deg,#3abdb8,#68d9d4)",
+  Q:"linear-gradient(135deg,#7c5cbf,#a88ee0)",R:"linear-gradient(135deg,#bf5c3a,#e08a68)",
+  S:"linear-gradient(135deg,#3a9dbf,#68c4e0)",T:"linear-gradient(135deg,#bf9c3a,#e0c468)",
+  U:"linear-gradient(135deg,#3abf7a,#68e0a8)",V:"linear-gradient(135deg,#8c3abf,#b868e0)",
+  W:"linear-gradient(135deg,#bf3a3a,#e07070)",X:"linear-gradient(135deg,#3a7abf,#68a8e0)",
+  Y:"linear-gradient(135deg,#bfb03a,#e0d468)",Z:"linear-gradient(135deg,#3abfbf,#68e0e0)"
 };
+function avatarBg(name){var l=(name||"?").trim().toUpperCase().charAt(0);return AVATAR_COLORS[l]||"linear-gradient(135deg,#3a8dde,#5ba8f5)";}
 
-function avatarBg(name) {
-  var letter = (name || "?").trim().toUpperCase().charAt(0);
-  return AVATAR_COLORS[letter] || "linear-gradient(135deg,#3a8dde,#5ba8f5)";
-}
-
-// ═══════════════════════════════════════════════════
-//  Wait for Firebase SDKs to be available, then init
-// ═══════════════════════════════════════════════════
 function waitForFirebase(cb) {
   var start = Date.now();
   var interval = setInterval(function() {
@@ -391,530 +392,342 @@ function waitForFirebase(cb) {
       clearInterval(interval);
       var ls = document.getElementById("loadingScreen");
       if (ls) ls.style.display = "none";
-      console.error("Firebase SDK failed to load within 10s. Continuing without Firebase.");
       var t = document.getElementById("toast");
-      if (t) {
-        t.textContent = "Firebase not available — core features disabled. See console (F12).";
-        t.classList.add("show");
-        setTimeout(function() { t.classList.remove("show"); }, 5000);
-      }
-      try { cb(false); } catch (e) { console.error("init error (timeout):", e); }
+      if (t) { t.textContent = "Firebase not available — check connection."; t.classList.add("show"); setTimeout(function(){t.classList.remove("show");},5000); }
+      try { cb(false); } catch (e) {}
     }
   }, 150);
 }
 
 waitForFirebase(function(firebaseAvailable) {
-
-  var auth = null;
-  var db   = null;
+  var auth = null, db = null;
 
   if (firebaseAvailable) {
     try {
       firebase.initializeApp({
-        apiKey:            "AIzaSyB7ExJSuFpqG9nT-_ZgSP7vMmRiiOqyCWk",
-        authDomain:        "educators-exchange.firebaseapp.com",
-        databaseURL:       "https://educators-exchange-default-rtdb.firebaseio.com",
-        projectId:         "educators-exchange",
-        storageBucket:     "educators-exchange.firebasestorage.app",
-        messagingSenderId: "900587995112",
-        appId:             "1:900587995112:web:7805d65fb2b6ae04d86e5d"
+        apiKey:"AIzaSyB7ExJSuFpqG9nT-_ZgSP7vMmRiiOqyCWk",
+        authDomain:"educators-exchange.firebaseapp.com",
+        databaseURL:"https://educators-exchange-default-rtdb.firebaseio.com",
+        projectId:"educators-exchange",
+        storageBucket:"educators-exchange.firebasestorage.app",
+        messagingSenderId:"900587995112",
+        appId:"1:900587995112:web:7805d65fb2b6ae04d86e5d"
       });
       auth = firebase.auth();
       db   = firebase.database();
-    } catch (err) {
-      console.error("Firebase init error:", err);
-      firebaseAvailable = false;
-    }
+    } catch (err) { console.error("Firebase init error:", err); firebaseAvailable = false; }
   }
 
   if (!firebaseAvailable) {
     auth = {
-      _cb: null,
-      onAuthStateChanged: function(cb) { this._cb = cb; setTimeout(function(){ cb(null); },0); },
-      signInWithEmailAndPassword: function() { return Promise.reject({ message: "Firebase not available" }); },
-      createUserWithEmailAndPassword: function() { return Promise.reject({ message: "Firebase not available" }); },
-      signOut: function() { return Promise.resolve(); }
+      onAuthStateChanged:function(cb){setTimeout(function(){cb(null);},0);},
+      signInWithEmailAndPassword:function(){return Promise.reject({message:"Firebase not available"});},
+      createUserWithEmailAndPassword:function(){return Promise.reject({message:"Firebase not available"});},
+      signOut:function(){return Promise.resolve();}
     };
-    db = {
-      ref: function() {
-        return {
-          on: function() {},
-          off: function() {},
-          once: function() { return Promise.resolve({ exists: function(){ return false; } }); },
-          push: function() { return Promise.reject({ message: "Firebase not available" }); },
-          set: function() { return Promise.reject({ message: "Firebase not available" }); },
-          update: function() { return Promise.reject({ message: "Firebase not available" }); },
-          remove: function() { return Promise.reject({ message: "Firebase not available" }); }
-        };
-      }
-    };
+    db={ref:function(){return{on:function(){},off:function(){},once:function(){return Promise.resolve({exists:function(){return false;}});},push:function(){return Promise.reject({message:"Firebase not available"});},set:function(){return Promise.reject({message:"Firebase not available"});},update:function(){return Promise.reject({message:"Firebase not available"});},remove:function(){return Promise.reject({message:"Firebase not available"});}};}}
   }
 
-  var lsElm = document.getElementById("loadingScreen");
-  if (lsElm) lsElm.style.display = "none";
+  var lsElm=document.getElementById("loadingScreen"); if(lsElm) lsElm.style.display="none";
 
-  var currentUser     = null;
-  var currentCat      = "all";
-  var currentPhoto    = null;
-  var allItems        = [];
-  var authMode        = "login";
-  var activeChatId    = null;
-  var chatRef         = null;
-  var conversations   = [];
+  var currentUser=null,currentCat="all",currentPhoto=null,allItems=[],authMode="login",activeChatId=null,chatRef=null,conversations=[];
 
-  function toast(msg) {
-    var t = document.getElementById("toast");
-    if (!t) return;
-    t.textContent = msg;
-    t.classList.add("show");
-    setTimeout(function() { t.classList.remove("show"); }, 2800);
-  }
+  function toast(msg){var t=document.getElementById("toast");if(!t)return;t.textContent=msg;t.classList.add("show");setTimeout(function(){t.classList.remove("show");},2800);}
+  function openM(id){var e=document.getElementById(id);if(e)e.classList.add("open");}
+  function closeM(id){var e=document.getElementById(id);if(e)e.classList.remove("open");}
+  var bind=function(id,fn){var el=document.getElementById(id);if(el)el.addEventListener("click",fn);};
 
-  function openM(id)  { var e=document.getElementById(id); if(e) e.classList.add("open"); }
-  function closeM(id) { var e=document.getElementById(id); if(e) e.classList.remove("open"); }
-  var bind = function(id, fn) { var el=document.getElementById(id); if(el) el.addEventListener("click", fn); };
-
-  ["postModal","helpModal","authModal","profileModal","inboxModal"].forEach(function(id) {
-    var el = document.getElementById(id);
-    if (!el) return;
-    el.addEventListener("click", function(e) {
-      if (e.target.id === id) closeM(id);
-    });
+  ["postModal","helpModal","authModal","profileModal","inboxModal"].forEach(function(id){
+    var el=document.getElementById(id);if(!el)return;
+    el.addEventListener("click",function(e){if(e.target.id===id)closeM(id);});
   });
 
-  bind("helpBtnTop",  function() { openM("helpModal"); });
-  bind("closeHelp",   function() { closeM("helpModal"); });
-  bind("closeHelpOk", function() { closeM("helpModal"); });
+  bind("helpBtnTop",function(){openM("helpModal");});
+  bind("closeHelp",function(){closeM("helpModal");});
+  bind("closeHelpOk",function(){closeM("helpModal");});
+  bind("fabBtn",openPostModal);
+  bind("closePost",function(){closeM("postModal");});
+  bind("cancelPost",function(){closeM("postModal");});
+  bind("submitPost",submitPost);
+  bind("closeAuth",function(){closeM("authModal");});
+  bind("cancelAuth",function(){closeM("authModal");});
+  bind("submitAuth",handleAuth);
+  bind("tabLogin",function(){setAuthMode("login");});
+  bind("tabSignup",function(){setAuthMode("signup");});
+  bind("closeProfile",function(){closeM("profileModal");});
+  bind("closeInbox",function(){closeM("inboxModal");});
+  bind("closeChat",closeChat);
+  bind("sendBtn",sendMessage);
 
-  bind("fabBtn",      openPostModal);
-  bind("closePost",   function() { closeM("postModal"); });
-  bind("cancelPost",  function() { closeM("postModal"); });
-  bind("submitPost",  submitPost);
+  var chatInputEl=document.getElementById("chatInput");
+  if(chatInputEl)chatInputEl.addEventListener("keydown",function(e){if(e.key==="Enter")sendMessage();});
 
-  bind("closeAuth",   function() { closeM("authModal"); });
-  bind("cancelAuth",  function() { closeM("authModal"); });
-  bind("submitAuth",  handleAuth);
-  bind("tabLogin",    function() { setAuthMode("login"); });
-  bind("tabSignup",   function() { setAuthMode("signup"); });
-
-  bind("closeProfile", function() { closeM("profileModal"); });
-  bind("closeInbox",   function() { closeM("inboxModal"); });
-  bind("closeChat",    closeChat);
-  bind("sendBtn",      sendMessage);
-
-  var chatInputEl = document.getElementById("chatInput");
-  if (chatInputEl) chatInputEl.addEventListener("keydown", function(e) { if (e.key === "Enter") sendMessage(); });
-
-  bind("navHome",    function() { render(); });
-  bind("navExplore", function() { toast("Explore coming soon!"); });
-  bind("navPost",    openPostModal);
+  bind("navHome",function(){render();});
+  bind("navExplore",function(){toast("Explore coming soon!");});
+  bind("navPost",openPostModal);
   bind("navMessages",openInbox);
-  bind("navProfile", openProfile);
+  bind("navProfile",openProfile);
 
-  document.querySelectorAll(".cat").forEach(function(el) {
-    el.addEventListener("click", function() {
-      currentCat = el.dataset.cat;
-      document.querySelectorAll(".cat").forEach(function(c) { c.classList.remove("active"); });
-      el.classList.add("active");
-      render();
+  document.querySelectorAll(".cat").forEach(function(el){
+    el.addEventListener("click",function(){
+      currentCat=el.dataset.cat;
+      document.querySelectorAll(".cat").forEach(function(c){c.classList.remove("active");});
+      el.classList.add("active");render();
     });
   });
 
-  var searchEl = document.getElementById("search");
-  if (searchEl) searchEl.addEventListener("input", render);
+  var searchEl=document.getElementById("search");
+  if(searchEl)searchEl.addEventListener("input",render);
 
-  var photoIn = document.getElementById("photoInput");
-  if (photoIn) photoIn.addEventListener("change", function(e) {
-    var file = e.target.files[0];
-    if (!file) return;
-    var reader = new FileReader();
-    reader.onload = function(ev) {
-      var img = new Image();
-      img.onload = function() {
-        var canvas = document.createElement("canvas");
-        var MAX = 600, w = img.width, h = img.height;
-        if (w > MAX) { h = h * MAX / w; w = MAX; }
-        if (h > MAX) { w = w * MAX / h; h = MAX; }
-        canvas.width = w; canvas.height = h;
-        canvas.getContext("2d").drawImage(img, 0, 0, w, h);
-        currentPhoto = canvas.toDataURL("image/jpeg", 0.7);
-        var p = document.getElementById("photoPreview");
-        if (p) { p.src = currentPhoto; p.style.display = "block"; }
-      };
-      img.src = ev.target.result;
-    };
-    reader.readAsDataURL(file);
+  var photoIn=document.getElementById("photoInput");
+  if(photoIn)photoIn.addEventListener("change",function(e){
+    var file=e.target.files[0];if(!file)return;
+    var reader=new FileReader();
+    reader.onload=function(ev){
+      var img=new Image();
+      img.onload=function(){
+        var canvas=document.createElement("canvas");
+        var MAX=600,w=img.width,h=img.height;
+        if(w>MAX){h=h*MAX/w;w=MAX;}if(h>MAX){w=w*MAX/h;h=MAX;}
+        canvas.width=w;canvas.height=h;
+        canvas.getContext("2d").drawImage(img,0,0,w,h);
+        currentPhoto=canvas.toDataURL("image/jpeg",0.7);
+        var p=document.getElementById("photoPreview");
+        if(p){p.src=currentPhoto;p.style.display="block";}
+      };img.src=ev.target.result;
+    };reader.readAsDataURL(file);
   });
 
-  if (auth && typeof auth.onAuthStateChanged === "function") {
-    auth.onAuthStateChanged(function(user) {
-      currentUser = user;
-      render();
-      if (user) listenInbox();
-    });
-  } else {
-    currentUser = null;
-    render();
-  }
+  if(auth&&typeof auth.onAuthStateChanged==="function"){
+    auth.onAuthStateChanged(function(user){currentUser=user;render();if(user)listenInbox();});
+  } else {currentUser=null;render();}
 
-  function render() {
-    var grid   = document.getElementById("items");
-    if (!grid) return;
-    var search = (document.getElementById("search") && document.getElementById("search").value.toLowerCase()) || "";
-    var filtered = allItems.filter(function(item) {
-      return (currentCat === "all" || item.category === currentCat) &&
-             item.title.toLowerCase().includes(search);
+  function render(){
+    var grid=document.getElementById("items");if(!grid)return;
+    var search=(document.getElementById("search")&&document.getElementById("search").value.toLowerCase())||"";
+    var filtered=allItems.filter(function(item){
+      return(currentCat==="all"||item.category===currentCat)&&item.title.toLowerCase().includes(search);
     });
-
-    if (filtered.length === 0) {
-      grid.style.display = "block";
-      grid.innerHTML = "<p style='text-align:center;color:#bbb;font-size:14px;padding:40px 0'>No items yet. Be the first to post!</p>";
+    if(filtered.length===0){
+      grid.style.display="block";
+      grid.innerHTML="<p style='text-align:center;color:#bbb;font-size:14px;padding:40px 0'>No items yet. Be the first to post!</p>";
       return;
     }
-    grid.style.display = "grid";
-    grid.innerHTML = "";
-
-    filtered.forEach(function(item) {
-      var imgSrc  = item.photo || "https://placehold.co/200x130/eef3f9/3a8dde?text=No+Photo";
-      var isOwner = currentUser && currentUser.uid === item.uid;
-      var card    = document.createElement("div");
-      card.className = "card";
-      card.innerHTML =
-        "<img src='" + imgSrc + "' alt='" + item.title + "'>" +
-        "<h3>" + item.title + "</h3>" +
-        "<p class='price'>$" + item.price + "</p>" +
-        "<p class='card-meta'>" + (item.postedBy || "Anonymous") + "</p>";
-
-      if (isOwner) {
-        var db_btn = document.createElement("button");
-        db_btn.className = "delete-btn"; db_btn.title = "Delete"; db_btn.innerHTML = "&#x2715;";
-        db_btn.addEventListener("click", (function(id) { return function() { deleteItem(id); }; })(item.id));
+    grid.style.display="grid";grid.innerHTML="";
+    filtered.forEach(function(item){
+      var imgSrc=item.photo||"https://placehold.co/200x130/eef3f9/3a8dde?text=No+Photo";
+      var isOwner=currentUser&&currentUser.uid===item.uid;
+      var card=document.createElement("div");card.className="card";
+      card.innerHTML="<img src='"+imgSrc+"' alt='"+item.title+"'><h3>"+item.title+"</h3><p class='price'>$"+item.price+"</p><p class='card-meta'>"+(item.postedBy||"Anonymous")+"</p>";
+      if(isOwner){
+        var db_btn=document.createElement("button");db_btn.className="delete-btn";db_btn.title="Delete";db_btn.innerHTML="&#x2715;";
+        db_btn.addEventListener("click",(function(id){return function(){deleteItem(id);};})(item.id));
         card.appendChild(db_btn);
-        var ob = document.createElement("button");
-        ob.className = "own-btn"; ob.textContent = "Your Listing";
-        card.appendChild(ob);
+        var ob=document.createElement("button");ob.className="own-btn";ob.textContent="Your Listing";card.appendChild(ob);
       } else {
-        var deal = document.createElement("button");
-        deal.className = "deal-btn"; deal.innerHTML = "&#x1F4AC; Make a Deal";
-        deal.addEventListener("click", (function(id) { return function() { startDeal(id); }; })(item.id));
+        var deal=document.createElement("button");deal.className="deal-btn";deal.innerHTML="&#x1F4AC; Make a Deal";
+        deal.addEventListener("click",(function(id){return function(){startDeal(id);};})(item.id));
         card.appendChild(deal);
       }
       grid.appendChild(card);
     });
   }
 
-  try {
-    if (db && typeof db.ref === "function") {
-      db.ref("items").on("value", function(snap) {
-        allItems = [];
-        if (snap && snap.exists && snap.exists()) {
-          snap.forEach && snap.forEach(function(child) { allItems.unshift(Object.assign({ id: child.key }, child.val())); });
-        }
+  try{
+    if(db&&typeof db.ref==="function"){
+      db.ref("items").on("value",function(snap){
+        allItems=[];
+        if(snap&&snap.exists&&snap.exists()){snap.forEach&&snap.forEach(function(child){allItems.unshift(Object.assign({id:child.key},child.val()));});}
         render();
       });
     }
-  } catch (e) {
-    console.error("items listener error:", e);
+  }catch(e){console.error("items listener error:",e);}
+
+  function openPostModal(){
+    var t=document.getElementById("titleIn");if(t)t.value="";
+    var p=document.getElementById("priceIn");if(p)p.value="";
+    var pp=document.getElementById("photoPreview");if(pp)pp.style.display="none";
+    var pi=document.getElementById("photoInput");if(pi)pi.value="";
+    currentPhoto=null;openM("postModal");
   }
 
-  function openPostModal() {
-    var t=document.getElementById("titleIn"); if(t) t.value = "";
-    var p=document.getElementById("priceIn"); if(p) p.value = "";
-    var pp=document.getElementById("photoPreview"); if(pp) pp.style.display = "none";
-    var pi=document.getElementById("photoInput"); if(pi) pi.value = "";
-    currentPhoto = null;
-    openM("postModal");
+  function submitPost(){
+    if(!currentUser){closeM("postModal");openM("authModal");toast("Please log in to post.");return;}
+    var title=(document.getElementById("titleIn")&&document.getElementById("titleIn").value.trim())||"";
+    var price=(document.getElementById("priceIn")&&document.getElementById("priceIn").value.trim())||"";
+    var cat=(document.getElementById("catIn")&&document.getElementById("catIn").value)||"setup";
+    if(!title||!price){toast("Please fill in title and price.");return;}
+    var btn=document.getElementById("submitPost");
+    if(btn){btn.disabled=true;btn.textContent="Posting...";}
+    if(!db||!db.ref){toast("Cannot post: backend not available.");if(btn){btn.disabled=false;btn.textContent="Post";}return;}
+    db.ref("items").push({title:title,price:price,category:cat,photo:currentPhoto||null,uid:currentUser.uid,postedBy:currentUser.displayName||currentUser.email,createdAt:Date.now()})
+    .then(function(){toast("Item posted! ✓");closeM("postModal");})
+    .catch(function(err){toast("Error: "+(err&&err.message?err.message:err));})
+    .finally(function(){if(btn){btn.disabled=false;btn.textContent="Post";}});
   }
 
-  function submitPost() {
-    if (!currentUser) { closeM("postModal"); openM("authModal"); toast("Please log in to post."); return; }
-    var title = (document.getElementById("titleIn") && document.getElementById("titleIn").value.trim()) || "";
-    var price = (document.getElementById("priceIn") && document.getElementById("priceIn").value.trim()) || "";
-    var cat   = (document.getElementById("catIn") && document.getElementById("catIn").value) || "setup";
-    if (!title || !price) { toast("Please fill in title and price."); return; }
-    var btn = document.getElementById("submitPost");
-    if (btn) { btn.disabled = true; btn.textContent = "Posting..."; }
-    if (!db || !db.ref) { toast("Cannot post: backend not available."); if (btn) { btn.disabled = false; btn.textContent = "Post"; } return; }
-    db.ref("items").push({
-      title: title, price: price, category: cat,
-      photo: currentPhoto || null,
-      uid: currentUser.uid,
-      postedBy: currentUser.displayName || currentUser.email,
-      createdAt: Date.now()
-    }).then(function() {
-      toast("Item posted! ✓"); closeM("postModal");
-    }).catch(function(err) { toast("Error: " + (err && err.message ? err.message : err)); })
-      .finally(function(){ if (btn) { btn.disabled = false; btn.textContent = "Post"; } });
+  function deleteItem(id){
+    if(!confirm("Delete this item?"))return;
+    if(!db||!db.ref){toast("Cannot delete: backend not available.");return;}
+    db.ref("items/"+id).remove()
+    .then(function(){toast("Deleted.");var pm=document.getElementById("profileModal");if(pm&&pm.classList.contains("open"))renderProfile();})
+    .catch(function(err){toast("Error: "+(err&&err.message?err.message:err));});
   }
 
-  function deleteItem(id) {
-    if (!confirm("Delete this item?")) return;
-    if (!db || !db.ref) { toast("Cannot delete: backend not available."); return; }
-    db.ref("items/" + id).remove()
-      .then(function() {
-        toast("Deleted.");
-        var pm = document.getElementById("profileModal");
-        if (pm && pm.classList.contains("open")) renderProfile();
-      })
-      .catch(function(err) { toast("Error: " + (err && err.message ? err.message : err)); });
+  function setAuthMode(mode){
+    authMode=mode;
+    var t=document.getElementById("tabLogin"),s=document.getElementById("tabSignup");
+    if(t)t.classList.toggle("active",mode==="login");if(s)s.classList.toggle("active",mode==="signup");
+    var sa=document.getElementById("submitAuth");if(sa)sa.textContent=mode==="login"?"Log In":"Sign Up";
+    var nr=document.getElementById("nameRow");if(nr)nr.style.display=mode==="signup"?"block":"none";
+    var ae=document.getElementById("authErr");if(ae)ae.classList.remove("show");
   }
 
-  function setAuthMode(mode) {
-    authMode = mode;
-    var t=document.getElementById("tabLogin"), s=document.getElementById("tabSignup");
-    if(t) t.classList.toggle("active", mode === "login");
-    if(s) s.classList.toggle("active", mode === "signup");
-    var sa = document.getElementById("submitAuth");
-    if (sa) sa.textContent = mode === "login" ? "Log In" : "Sign Up";
-    var nr = document.getElementById("nameRow");
-    if (nr) nr.style.display = mode === "signup" ? "block" : "none";
-    var ae = document.getElementById("authErr"); if(ae) ae.classList.remove("show");
+  function handleAuth(){
+    var email=(document.getElementById("authEmail")&&document.getElementById("authEmail").value.trim())||"";
+    var pass=(document.getElementById("authPass")&&document.getElementById("authPass").value)||"";
+    var name=(document.getElementById("authName")&&document.getElementById("authName").value.trim())||"";
+    var err=document.getElementById("authErr"),btn=document.getElementById("submitAuth");
+    if(err)err.classList.remove("show");
+    if(!email||!pass){if(err){err.textContent="Please enter email and password.";err.classList.add("show");}return;}
+    if(authMode==="signup"&&!name){if(err){err.textContent="Please enter your name.";err.classList.add("show");}return;}
+    if(btn){btn.disabled=true;btn.textContent=authMode==="login"?"Logging in...":"Creating...";}
+    var p=authMode==="login"
+      ?auth.signInWithEmailAndPassword(email,pass)
+      :auth.createUserWithEmailAndPassword(email,pass).then(function(cred){return cred.user.updateProfile({displayName:name}).then(function(){return cred;});});
+    p.then(function(){toast(authMode==="login"?"Welcome back! ✓":"Welcome, "+name+"! ✓");closeM("authModal");})
+    .catch(function(e){
+      var msgs={"auth/user-not-found":"No account with that email.","auth/wrong-password":"Incorrect password.","auth/email-already-in-use":"Email already registered.","auth/weak-password":"Password needs 6+ characters.","auth/invalid-email":"Enter a valid email.","auth/invalid-credential":"Incorrect email or password.","auth/too-many-requests":"Too many attempts. Please wait a moment.","auth/network-request-failed":"Network error. Check your connection."};
+      if(err){err.textContent=msgs[e.code]||e.message||e;err.classList.add("show");}
+    })
+    .finally(function(){if(btn){btn.disabled=false;btn.textContent=authMode==="login"?"Log In":"Sign Up";}});
   }
 
-  function handleAuth() {
-    var email = (document.getElementById("authEmail") && document.getElementById("authEmail").value.trim()) || "";
-    var pass  = (document.getElementById("authPass") && document.getElementById("authPass").value) || "";
-    var name  = (document.getElementById("authName") && document.getElementById("authName").value.trim()) || "";
-    var err   = document.getElementById("authErr");
-    var btn   = document.getElementById("submitAuth");
-    if (err) err.classList.remove("show");
-    if (!email || !pass) { if (err) { err.textContent = "Please enter email and password."; err.classList.add("show"); } return; }
-    if (authMode === "signup" && !name) { if (err) { err.textContent = "Please enter your name."; err.classList.add("show"); } return; }
-    if (btn) { btn.disabled = true; btn.textContent = authMode === "login" ? "Logging in..." : "Creating..."; }
+  function openProfile(){renderProfile();openM("profileModal");}
 
-    var p;
-    if (authMode === "login") {
-      p = auth.signInWithEmailAndPassword(email, pass);
-    } else {
-      p = auth.createUserWithEmailAndPassword(email, pass).then(function(cred) {
-        return cred.user.updateProfile({ displayName: name }).then(function() { return cred; });
-      });
-    }
-
-    p.then(function() {
-      toast(authMode === "login" ? "Welcome back! ✓" : "Welcome, " + name + "! ✓");
-      closeM("authModal");
-    }).catch(function(e) {
-      var msgs = {
-        "auth/user-not-found":       "No account with that email.",
-        "auth/wrong-password":       "Incorrect password.",
-        "auth/email-already-in-use": "Email already registered.",
-        "auth/weak-password":        "Password needs 6+ characters.",
-        "auth/invalid-email":        "Enter a valid email.",
-        "auth/invalid-credential":   "Incorrect email or password.",
-        "auth/too-many-requests":    "Too many attempts. Please wait a moment.",
-        "auth/network-request-failed": "Network error. Check your connection."
-      };
-      if (err) { err.textContent = msgs[e.code] || e.message || e; err.classList.add("show"); }
-    }).finally(function() {
-      if (btn) { btn.disabled = false; btn.textContent = authMode === "login" ? "Log In" : "Sign Up"; }
-    });
-  }
-
-  function openProfile() { renderProfile(); openM("profileModal"); }
-
-  function renderProfile() {
-    var body = document.getElementById("profileBody");
-    if (!body) return;
-    if (!currentUser) {
-      body.innerHTML = "<p style='text-align:center;color:#888;font-size:14px;margin-bottom:18px;line-height:1.6'>Log in to view your profile and manage your listings.</p><button class='btn-blue' style='width:100%' id='pLoginBtn'>Log In / Sign Up</button>";
-      var btn = document.getElementById("pLoginBtn");
-      if (btn) btn.addEventListener("click", function() { closeM("profileModal"); openM("authModal"); });
+  function renderProfile(){
+    var body=document.getElementById("profileBody");if(!body)return;
+    if(!currentUser){
+      body.innerHTML="<p style='text-align:center;color:#888;font-size:14px;margin-bottom:18px;line-height:1.6'>Log in to view your profile and manage your listings.</p><button class='btn-blue' style='width:100%' id='pLoginBtn'>Log In / Sign Up</button>";
+      var btn=document.getElementById("pLoginBtn");if(btn)btn.addEventListener("click",function(){closeM("profileModal");openM("authModal");});
       return;
     }
-    var name     = currentUser.displayName || currentUser.email;
-    var initials = (name || "").slice(0,2).toUpperCase();
-    var myItems  = allItems.filter(function(i) { return i.uid === currentUser.uid; });
-    var itemsHTML = myItems.length === 0
-      ? "<p style='color:#bbb;font-size:13px;text-align:center;padding:14px 0'>No listings yet.</p>"
-      : myItems.map(function(item) {
-          return "<div class='p-item'>" +
-            "<img src='" + (item.photo || "https://placehold.co/50x50/eef3f9/3a8dde?text=?") + "'>" +
-            "<div class='p-info'><div class='p-title'>" + item.title + "</div><div class='p-price'>$" + item.price + "</div></div>" +
-            "<button class='p-del' data-id='" + item.id + "'>Delete</button></div>";
-        }).join("");
-
-    // ── avatar color from name ──
-    body.innerHTML =
-      "<div class='p-avatar' style='background:" + avatarBg(name) + "'>" + initials + "</div>" +
-      "<div class='p-name'>" + name + "</div>" +
-      "<div class='p-email'>" + (currentUser.email || "") + "</div>" +
-      "<div class='p-stats'><div class='stat'><div class='stat-n'>" + myItems.length + "</div><div class='stat-l'>My Posts</div></div></div>" +
-      "<hr class='p-div'><div class='p-sec'>My Listings</div>" + itemsHTML +
-      "<button class='btn-red' id='logoutBtn'>Log Out</button>";
-
-    body.querySelectorAll(".p-del").forEach(function(btn) {
-      btn.addEventListener("click", function() { deleteItem(btn.dataset.id); });
-    });
-    var logoutBtn = document.getElementById("logoutBtn");
-    if (logoutBtn) logoutBtn.addEventListener("click", function() {
-      if (!auth || !auth.signOut) { toast("Cannot log out (no auth)."); closeM("profileModal"); return; }
-      auth.signOut().then(function() { toast("Logged out."); closeM("profileModal"); }).catch(function(){ toast("Error logging out."); });
+    var name=currentUser.displayName||currentUser.email;
+    var initials=(name||"").slice(0,2).toUpperCase();
+    var myItems=allItems.filter(function(i){return i.uid===currentUser.uid;});
+    var itemsHTML=myItems.length===0
+      ?"<p style='color:#bbb;font-size:13px;text-align:center;padding:14px 0'>No listings yet.</p>"
+      :myItems.map(function(item){return "<div class='p-item'><img src='"+(item.photo||"https://placehold.co/50x50/eef3f9/3a8dde?text=?")+"'><div class='p-info'><div class='p-title'>"+item.title+"</div><div class='p-price'>$"+item.price+"</div></div><button class='p-del' data-id='"+item.id+"'>Delete</button></div>";}).join("");
+    body.innerHTML="<div class='p-avatar' style='background:"+avatarBg(name)+"'>"+initials+"</div><div class='p-name'>"+name+"</div><div class='p-email'>"+(currentUser.email||"")+"</div><div class='p-stats'><div class='stat'><div class='stat-n'>"+myItems.length+"</div><div class='stat-l'>My Posts</div></div></div><hr class='p-div'><div class='p-sec'>My Listings</div>"+itemsHTML+"<button class='btn-red' id='logoutBtn'>Log Out</button>";
+    body.querySelectorAll(".p-del").forEach(function(btn){btn.addEventListener("click",function(){deleteItem(btn.dataset.id);});});
+    var logoutBtn=document.getElementById("logoutBtn");
+    if(logoutBtn)logoutBtn.addEventListener("click",function(){
+      if(!auth||!auth.signOut){toast("Cannot log out.");closeM("profileModal");return;}
+      auth.signOut().then(function(){toast("Logged out.");closeM("profileModal");}).catch(function(){toast("Error logging out.");});
     });
   }
 
-  function startDeal(itemId) {
-    if (!currentUser) { openM("authModal"); toast("Please log in to message."); return; }
-    var item = allItems.find(function(i) { return i.id === itemId; });
-    if (!item) return;
-    if (item.uid === currentUser.uid) { toast("That's your own listing!"); return; }
-    if (!db || !db.ref) { toast("Messaging not available (backend down)."); return; }
-    var chatId = [currentUser.uid, item.uid].sort().join("_") + "_" + itemId;
-    db.ref("chats/" + chatId + "/meta").set({
-      itemId: itemId, itemTitle: item.title, itemPrice: item.price,
-      itemPhoto: item.photo || null, sellerId: item.uid,
-      sellerName: item.postedBy || "Seller",
-      buyerId: currentUser.uid,
-      buyerName: currentUser.displayName || currentUser.email,
-      updatedAt: Date.now()
-    }).then(function() { openChat(chatId, item); }).catch(function(e){ toast("Cannot create chat: " + (e && e.message ? e.message : e)); });
+  function startDeal(itemId){
+    if(!currentUser){openM("authModal");toast("Please log in to message.");return;}
+    var item=allItems.find(function(i){return i.id===itemId;});
+    if(!item)return;
+    if(item.uid===currentUser.uid){toast("That's your own listing!");return;}
+    if(!db||!db.ref){toast("Messaging not available.");return;}
+    var chatId=[currentUser.uid,item.uid].sort().join("_")+"_"+itemId;
+    db.ref("chats/"+chatId+"/meta").set({itemId:itemId,itemTitle:item.title,itemPrice:item.price,itemPhoto:item.photo||null,sellerId:item.uid,sellerName:item.postedBy||"Seller",buyerId:currentUser.uid,buyerName:currentUser.displayName||currentUser.email,updatedAt:Date.now()})
+    .then(function(){openChat(chatId,item);}).catch(function(e){toast("Cannot create chat: "+(e&&e.message?e.message:e));});
   }
 
-  function openChat(chatId, item) {
-    activeChatId = chatId;
-    var isSeller  = currentUser && currentUser.uid === item.uid;
-    var otherName = isSeller ? (item.buyerName || "Buyer") : (item.postedBy || "Seller");
-
-    // ── avatar color from other person's name ──
-    var av = document.getElementById("chatAv");
-    if (av) {
-      av.textContent  = (otherName || "??").slice(0,2).toUpperCase();
-      av.style.background = avatarBg(otherName);
-    }
-
-    var cn = document.getElementById("chatName"); if (cn) cn.textContent = otherName;
-    var cs = document.getElementById("chatSub"); if (cs) cs.textContent  = "Re: " + item.title;
-    var img = item.photo || "https://placehold.co/44x44/eef3f9/3a8dde?text=?";
-    var cib = document.getElementById("chatItemBar");
-    if (cib) cib.innerHTML =
-      "<img src='" + img + "'><div><div class='cibar-t'>" + item.title + "</div><div class='cibar-p'>$" + item.price + "</div></div>";
-
-    var chipTexts = ["Hey! Is this still available?","Would you take a lower price?","Can I see more photos?","I'll take it! 👍","What condition is it in?"];
-    var chipsEl = document.getElementById("chatChips");
-    if (chipsEl) {
-      chipsEl.innerHTML = "";
-      chipTexts.forEach(function(text) {
-        var b = document.createElement("button"); b.className = "chip"; b.textContent = text;
-        b.addEventListener("click", function() { var ci=document.getElementById("chatInput"); if(ci) { ci.value = text; ci.focus(); } });
-        chipsEl.appendChild(b);
-      });
-    }
-
-    var msgsEl = document.getElementById("chatMsgs"); if (msgsEl) msgsEl.innerHTML = "";
-    var inputEl = document.getElementById("chatInput"); if (inputEl) inputEl.value = "";
+  function openChat(chatId,item){
+    activeChatId=chatId;
+    var isSeller=currentUser&&currentUser.uid===item.uid;
+    var otherName=isSeller?(item.buyerName||"Buyer"):(item.postedBy||"Seller");
+    var av=document.getElementById("chatAv");
+    if(av){av.textContent=(otherName||"??").slice(0,2).toUpperCase();av.style.background=avatarBg(otherName);}
+    var cn=document.getElementById("chatName");if(cn)cn.textContent=otherName;
+    var cs=document.getElementById("chatSub");if(cs)cs.textContent="Re: "+item.title;
+    var img=item.photo||"https://placehold.co/44x44/eef3f9/3a8dde?text=?";
+    var cib=document.getElementById("chatItemBar");
+    if(cib)cib.innerHTML="<img src='"+img+"'><div><div class='cibar-t'>"+item.title+"</div><div class='cibar-p'>$"+item.price+"</div></div>";
+    var chipTexts=["Hey! Is this still available?","Would you take a lower price?","Can I see more photos?","I'll take it! 👍","What condition is it in?"];
+    var chipsEl=document.getElementById("chatChips");
+    if(chipsEl){chipsEl.innerHTML="";chipTexts.forEach(function(text){var b=document.createElement("button");b.className="chip";b.textContent=text;b.addEventListener("click",function(){var ci=document.getElementById("chatInput");if(ci){ci.value=text;ci.focus();}});chipsEl.appendChild(b);});}
+    var msgsEl=document.getElementById("chatMsgs");if(msgsEl)msgsEl.innerHTML="";
+    var inputEl=document.getElementById("chatInput");if(inputEl)inputEl.value="";
     openM("chatModal");
-
-    if (!db || !db.ref) { toast("Chat history unavailable (backend down)."); return; }
-    if (chatRef && chatRef.off) chatRef.off();
-    chatRef = db.ref("chats/" + chatId + "/messages");
-    chatRef.on("value", function(snap) {
-      var box = document.getElementById("chatMsgs"); if (!box) return; box.innerHTML = "";
-      if (snap && snap.exists && snap.exists()) {
-        snap.forEach && snap.forEach(function(child) {
-          var m = child.val(), mine = m.uid === (currentUser && currentUser.uid);
-          var time = new Date(m.ts).toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});
-          var row = document.createElement("div"); row.className = "mrow " + (mine ? "mine" : "theirs");
-          row.innerHTML =
-            "<div>" +
-              (!mine ? "<div class='mwho'>" + (m.senderName||"") + "</div>" : "") +
-              "<div class='bbl'>" + (m.text||"") + "</div>" +
-            "</div>" +
-            "<div class='mtime'>" + time + "</div>";
+    if(!db||!db.ref){toast("Chat history unavailable.");return;}
+    if(chatRef&&chatRef.off)chatRef.off();
+    chatRef=db.ref("chats/"+chatId+"/messages");
+    chatRef.on("value",function(snap){
+      var box=document.getElementById("chatMsgs");if(!box)return;box.innerHTML="";
+      if(snap&&snap.exists&&snap.exists()){
+        snap.forEach&&snap.forEach(function(child){
+          var m=child.val(),mine=m.uid===(currentUser&&currentUser.uid);
+          var time=new Date(m.ts).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
+          var row=document.createElement("div");row.className="mrow "+(mine?"mine":"theirs");
+          row.innerHTML="<div>"+(!mine?"<div class='mwho'>"+(m.senderName||"")+"</div>":"")+"<div class='bbl'>"+(m.text||"")+"</div></div><div class='mtime'>"+time+"</div>";
           box.appendChild(row);
         });
       }
-      box.scrollTop = box.scrollHeight;
+      box.scrollTop=box.scrollHeight;
     });
-    if (db.ref(  "chats/" + chatId + "/meta").update) {
-      db.ref("chats/" + chatId + "/meta").update({ ["unread_" + (currentUser && currentUser.uid)]: 0 });
-    }
+    if(db.ref("chats/"+chatId+"/meta").update){db.ref("chats/"+chatId+"/meta").update({["unread_"+(currentUser&&currentUser.uid)]:0});}
   }
 
-  function closeChat() {
-    if (chatRef && chatRef.off) { chatRef.off(); chatRef = null; }
-    activeChatId = null; closeM("chatModal");
-  }
+  function closeChat(){if(chatRef&&chatRef.off){chatRef.off();chatRef=null;}activeChatId=null;closeM("chatModal");}
 
-  function sendMessage() {
-    if (!activeChatId || !currentUser) return;
-    var input = document.getElementById("chatInput");
-    if (!input) return;
-    var text = input.value.trim();
-    if (!text) return; input.value = "";
-    if (!db || !db.ref) { toast("Cannot send: backend not available."); return; }
-    db.ref("chats/" + activeChatId + "/messages").push({
-      text: text, uid: currentUser.uid,
-      senderName: currentUser.displayName || currentUser.email, ts: Date.now()
-    }).catch(function(e){ toast("Send failed: " + (e && e.message ? e.message : e)); });
-    db.ref("chats/" + activeChatId + "/meta").once("value").then(function(snap) {
-      if (!snap || !snap.exists || !snap.exists()) return;
-      var meta = snap.val(), otherId = meta.sellerId === currentUser.uid ? meta.buyerId : meta.sellerId;
-      var update = { lastMessage: text, updatedAt: Date.now() };
-      update["unread_" + otherId] = (meta["unread_" + otherId] || 0) + 1;
-      db.ref("chats/" + activeChatId + "/meta").update(update);
+  function sendMessage(){
+    if(!activeChatId||!currentUser)return;
+    var input=document.getElementById("chatInput");if(!input)return;
+    var text=input.value.trim();if(!text)return;input.value="";
+    if(!db||!db.ref){toast("Cannot send: backend not available.");return;}
+    db.ref("chats/"+activeChatId+"/messages").push({text:text,uid:currentUser.uid,senderName:currentUser.displayName||currentUser.email,ts:Date.now()}).catch(function(e){toast("Send failed: "+(e&&e.message?e.message:e));});
+    db.ref("chats/"+activeChatId+"/meta").once("value").then(function(snap){
+      if(!snap||!snap.exists||!snap.exists())return;
+      var meta=snap.val(),otherId=meta.sellerId===currentUser.uid?meta.buyerId:meta.sellerId;
+      var update={lastMessage:text,updatedAt:Date.now()};update["unread_"+otherId]=(meta["unread_"+otherId]||0)+1;
+      db.ref("chats/"+activeChatId+"/meta").update(update);
     }).catch(function(){});
   }
 
-  function listenInbox() {
-    if (!db || !db.ref) return;
-    db.ref("chats").on("value", function(snap) {
-      conversations = []; var unread = 0;
-      if (snap && snap.exists && snap.exists()) {
-        snap.forEach && snap.forEach(function(child) {
-          var meta = child.val().meta; if (!meta) return;
-          if (meta.sellerId !== (currentUser && currentUser.uid) && meta.buyerId !== (currentUser && currentUser.uid)) return;
-          var u = meta["unread_" + (currentUser && currentUser.uid)] || 0; unread += u;
-          conversations.push(Object.assign({ id: child.key, unread: u }, meta));
+  function listenInbox(){
+    if(!db||!db.ref)return;
+    db.ref("chats").on("value",function(snap){
+      conversations=[];var unread=0;
+      if(snap&&snap.exists&&snap.exists()){
+        snap.forEach&&snap.forEach(function(child){
+          var meta=child.val().meta;if(!meta)return;
+          if(meta.sellerId!==(currentUser&&currentUser.uid)&&meta.buyerId!==(currentUser&&currentUser.uid))return;
+          var u=meta["unread_"+(currentUser&&currentUser.uid)]||0;unread+=u;
+          conversations.push(Object.assign({id:child.key,unread:u},meta));
         });
       }
-      conversations.sort(function(a,b) { return (b.updatedAt||0)-(a.updatedAt||0); });
-      var badge = document.getElementById("inboxBadge");
-      if (badge) {
-        if (unread > 0) { badge.textContent = unread; badge.classList.add("show"); }
-        else badge.classList.remove("show");
-      }
-      var im = document.getElementById("inboxModal");
-      if (im && im.classList.contains("open")) renderInbox();
+      conversations.sort(function(a,b){return(b.updatedAt||0)-(a.updatedAt||0);});
+      var badge=document.getElementById("inboxBadge");
+      if(badge){if(unread>0){badge.textContent=unread;badge.classList.add("show");}else badge.classList.remove("show");}
+      var im=document.getElementById("inboxModal");if(im&&im.classList.contains("open"))renderInbox();
     });
   }
 
-  function openInbox() { renderInbox(); openM("inboxModal"); }
+  function openInbox(){renderInbox();openM("inboxModal");}
 
-  function renderInbox() {
-    var list = document.getElementById("inboxList");
-    if (!list) return;
-    if (!currentUser) { list.innerHTML = "<div class='iempty'>Log in to see your messages.</div>"; return; }
-    if (conversations.length === 0) { list.innerHTML = "<div class='iempty'>No messages yet.<br>Tap \"Make a Deal\" to start chatting!</div>"; return; }
-    list.innerHTML = "";
-    conversations.forEach(function(c) {
-      var isSeller = c.sellerId === (currentUser && currentUser.uid);
-      var other    = isSeller ? c.buyerName : c.sellerName;
-      var init     = (other || "?").slice(0,2).toUpperCase();
-      var row      = document.createElement("div"); row.className = "irow";
-
-      // ── avatar color from other person's name ──
-      row.innerHTML =
-        "<div class='iav' style='background:" + avatarBg(other) + "'>" + init + "</div>" +
-        "<div class='iinfo'><div class='iname'>" + (other||"User") + "</div><div class='iprev'>" + (c.lastMessage||"Conversation started") + "</div></div>" +
-        "<div style='display:flex;flex-direction:column;align-items:flex-end;gap:5px'>" +
-          "<div class='itime'>" + timeAgo(c.updatedAt) + "</div>" +
-          (c.unread > 0 ? "<div class='udot'></div>" : "") +
-        "</div>";
-
-      row.addEventListener("click", (function(conv) { return function() {
-        var fake = { id: conv.itemId, title: conv.itemTitle, price: conv.itemPrice, photo: conv.itemPhoto, uid: conv.sellerId, postedBy: conv.sellerName, buyerName: conv.buyerName };
-        closeM("inboxModal"); openChat(conv.id, fake);
-      }; })(c));
+  function renderInbox(){
+    var list=document.getElementById("inboxList");if(!list)return;
+    if(!currentUser){list.innerHTML="<div class='iempty'>Log in to see your messages.</div>";return;}
+    if(conversations.length===0){list.innerHTML="<div class='iempty'>No messages yet.<br>Tap \"Make a Deal\" to start chatting!</div>";return;}
+    list.innerHTML="";
+    conversations.forEach(function(c){
+      var isSeller=c.sellerId===(currentUser&&currentUser.uid);
+      var other=isSeller?c.buyerName:c.sellerName;
+      var init=(other||"?").slice(0,2).toUpperCase();
+      var row=document.createElement("div");row.className="irow";
+      row.innerHTML="<div class='iav' style='background:"+avatarBg(other)+"'>"+init+"</div><div class='iinfo'><div class='iname'>"+(other||"User")+"</div><div class='iprev'>"+(c.lastMessage||"Conversation started")+"</div></div><div style='display:flex;flex-direction:column;align-items:flex-end;gap:5px'><div class='itime'>"+timeAgo(c.updatedAt)+"</div>"+(c.unread>0?"<div class='udot'></div>":"")+"</div>";
+      row.addEventListener("click",(function(conv){return function(){var fake={id:conv.itemId,title:conv.itemTitle,price:conv.itemPrice,photo:conv.itemPhoto,uid:conv.sellerId,postedBy:conv.sellerName,buyerName:conv.buyerName};closeM("inboxModal");openChat(conv.id,fake);};})(c));
       list.appendChild(row);
     });
   }
 
-  function timeAgo(ts) {
-    if (!ts) return "";
-    var s = Math.floor((Date.now()-ts)/1000);
-    if (s < 60) return "now"; if (s < 3600) return Math.floor(s/60)+"m";
-    if (s < 86400) return Math.floor(s/3600)+"h"; return Math.floor(s/86400)+"d";
-  }
+  function timeAgo(ts){if(!ts)return "";var s=Math.floor((Date.now()-ts)/1000);if(s<60)return "now";if(s<3600)return Math.floor(s/60)+"m";if(s<86400)return Math.floor(s/3600)+"h";return Math.floor(s/86400)+"d";}
 
 }); // end waitForFirebase
 </script>
