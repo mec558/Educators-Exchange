@@ -129,6 +129,8 @@ body { background:#f2f6fc; padding-bottom:80px; }
 .iempty { text-align:center; color:#bbb; font-size:14px; padding:40px 20px; line-height:1.7; }
 
 .cbox { background:white; width:360px; border-radius:20px; box-shadow:0 20px 60px rgba(0,0,0,0.15); max-height:92vh; display:flex; flex-direction:column; overflow:hidden; }
+.cbox.fullscreen { position:fixed; top:0; left:0; width:100%; height:100vh; border-radius:0; max-height:none; z-index:10000; }
+.cbox.fullscreen .cmsgs { padding:18px 20px; }
 .chdr { padding:14px 16px; border-bottom:1px solid #f0f4f9; display:flex; align-items:center; gap:10px; flex-shrink:0; }
 .cav { width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; color:white; font-weight:800; flex-shrink:0; }
 .cname { font-size:14px; font-weight:800; color:#222; }
@@ -342,6 +344,7 @@ body { background:#f2f6fc; padding-bottom:80px; }
   <div class="cbox">
     <div class="chdr">
       <button class="back-btn" id="closeChat"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Back</button>
+      <button class="back-btn" id="chatFullBtn" title="Toggle fullscreen"><svg viewBox="0 0 24 24"><path d="M3 9V3h6"/><path d="M21 15v6h-6"/><path d="M21 3h-6v6"/><path d="M3 21h6v-6"/></svg></button>
       <div class="cav" id="chatAv"></div>
       <div>
         <div class="cname" id="chatName"></div>
@@ -457,6 +460,7 @@ waitForFirebase(function(firebaseAvailable) {
   bind("closeProfile",function(){closeM("profileModal");});
   bind("closeInbox",function(){closeM("inboxModal");});
   bind("closeChat",closeChat);
+  bind("chatFullBtn",toggleChatFullscreen);
   bind("sendBtn",sendMessage);
 
   var chatInputEl=document.getElementById("chatInput");
@@ -656,6 +660,8 @@ waitForFirebase(function(firebaseAvailable) {
     var inputEl=document.getElementById("chatInput");if(inputEl)inputEl.value="";
     openM("chatModal");
     if(!db||!db.ref){toast("Chat history unavailable.");return;}
+    // show a one-time tip about fullscreen for this session
+    try{if(!sessionStorage.getItem('chat_fullscreen_tip_shown')){toast('Tip: tap the Back button icon to toggle fullscreen chat.');sessionStorage.setItem('chat_fullscreen_tip_shown','1');}}catch(e){}
     if(chatRef&&chatRef.off)chatRef.off();
     chatRef=db.ref("chats/"+chatId+"/messages");
     chatRef.on("value",function(snap){
@@ -674,20 +680,44 @@ waitForFirebase(function(firebaseAvailable) {
     if(db.ref("chats/"+chatId+"/meta").update){db.ref("chats/"+chatId+"/meta").update({["unread_"+(currentUser&&currentUser.uid)]:0});}
   }
 
-  function closeChat(){if(chatRef&&chatRef.off){chatRef.off();chatRef=null;}activeChatId=null;closeM("chatModal");}
+  function closeChat(){if(chatRef&&chatRef.off){chatRef.off();chatRef=null;}activeChatId=null;closeM("chatModal");var box=document.querySelector('.cbox');if(box)box.classList.remove('fullscreen');}
+
+  function toggleChatFullscreen(){
+    var box=document.querySelector(".cbox"); if(!box) return; box.classList.toggle("fullscreen");
+  }
 
   function sendMessage(){
     if(!activeChatId||!currentUser)return;
     var input=document.getElementById("chatInput");if(!input)return;
     var text=input.value.trim();if(!text)return;input.value="";
-    if(!db||!db.ref){toast("Cannot send: backend not available.");return;}
-    db.ref("chats/"+activeChatId+"/messages").push({text:text,uid:currentUser.uid,senderName:currentUser.displayName||currentUser.email,ts:Date.now()}).catch(function(e){toast("Send failed: "+(e&&e.message?e.message:e));});
+    var msg={text:text,uid:currentUser.uid,senderName:currentUser.displayName||currentUser.email,ts:Date.now()};
+    if(!db||!db.ref){
+      // still save locally so it isn't lost
+      saveMessageToLocal(activeChatId,msg);
+      toast("Message saved locally (offline).");
+      // render immediately
+      try{var box=document.getElementById("chatMsgs");if(box){var row=document.createElement('div');row.className='mrow mine';row.innerHTML="<div><div class='bbl'>"+msg.text+"</div></div><div class='mtime'>"+new Date(msg.ts).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+"</div>";box.appendChild(row);box.scrollTop=box.scrollHeight;}}catch(e){}
+      return;
+    }
+    db.ref("chats/"+activeChatId+"/messages").push(msg).catch(function(e){toast("Send failed: "+(e&&e.message?e.message:e));});
+    // also save locally for faster reloading
+    saveMessageToLocal(activeChatId,msg);
     db.ref("chats/"+activeChatId+"/meta").once("value").then(function(snap){
       if(!snap||!snap.exists||!snap.exists())return;
       var meta=snap.val(),otherId=meta.sellerId===currentUser.uid?meta.buyerId:meta.sellerId;
       var update={lastMessage:text,updatedAt:Date.now()};update["unread_"+otherId]=(meta["unread_"+otherId]||0)+1;
       db.ref("chats/"+activeChatId+"/meta").update(update);
     }).catch(function(){});
+  }
+
+  function saveMessageToLocal(chatId,msg){
+    try{
+      var key='chat_'+chatId;
+      var arr=JSON.parse(localStorage.getItem(key)||"[]");
+      arr.push(msg);
+      if(arr.length>500) arr=arr.slice(-500);
+      localStorage.setItem(key,JSON.stringify(arr));
+    }catch(e){}
   }
 
   function listenInbox(){
