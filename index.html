@@ -740,7 +740,7 @@ waitForFirebase(function(firebaseAvailable) {
     });
   }
 
-  function openInbox(){if(currentUser)listenInbox();renderInbox();openM("inboxModal");}
+  function openInbox(){renderInbox();openM("inboxModal");}
 
   function renderInbox(){
     var list=document.getElementById("inboxList");if(!list)return;
