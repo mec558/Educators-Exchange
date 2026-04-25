@@ -185,13 +185,13 @@ ey
 .zoom-nav { position: absolute; top: 10px; left: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 16px; gap: 12px; z-index: 10002; }
 .zoom-nav button { padding: 10px 12px; min-width: 60px; background: rgba(0,0,0,0.7); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; }
 .zoom-nav button:hover { background: rgba(0,0,0,0.9); }
-.zoom-controls { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; width: calc(100% - 32px); padding-bottom: calc(env(safe-area-inset-bottom, 16px)); z-index: 10003; }
-.zoom-controls button { padding: 12px 16px; background: rgba(0,0,0,0.7); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; width: 100%; }
+.zoom-controls { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; justify-content: center; padding-bottom: calc(env(safe-area-inset-bottom, 16px)); z-index: 10003; }
+.zoom-controls button { padding: 8px 12px; min-width: 50px; max-width: 60px; background: rgba(0,0,0,0.7); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; }
 .zoom-controls button:hover { background: rgba(0,0,0,0.9); }
 @media (max-width: 640px) {
   .zoom-nav { padding: 0 10px; }
-  .zoom-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-  .zoom-controls button { font-size: 15px; }
+  .zoom-controls { gap: 6px; }
+  .zoom-controls button { padding: 6px 10px; min-width: 45px; max-width: 55px; font-size: 13px; }
 }
 </style>
 </head>
@@ -399,6 +399,7 @@ ey
   <div class="zoom-modal-content">
     <span class="close" id="closeZoom">&times;</span>
     <div class="zoom-nav">
+      <button id="backZoomBtn">Back</button>
       <button id="prevImageBtn">Prev</button>
       <div id="zoomImageCounter" style="color:white;font-weight:700;align-self:center;font-size:14px">0 / 0</div>
       <button id="nextImageBtn">Next</button>
@@ -871,6 +872,7 @@ waitForFirebase(function(firebaseAvailable) {
   const resetZoomBtn = document.getElementById('resetZoomBtn');
   const prevImageBtn = document.getElementById('prevImageBtn');
   const nextImageBtn = document.getElementById('nextImageBtn');
+  const backZoomBtn = document.getElementById('backZoomBtn');
   const zoomImageCounter = document.getElementById('zoomImageCounter');
   let zoomScale = 1;
 
@@ -890,6 +892,10 @@ waitForFirebase(function(firebaseAvailable) {
     if(zoomModal)zoomModal.style.display = 'flex';
     updateZoomNav();
   }
+
+  if(backZoomBtn)backZoomBtn.addEventListener('click', function(){
+    zoomModal.style.display = 'none';
+  });
 
   if(prevImageBtn)prevImageBtn.addEventListener('click', function(){
     if(currentZoomIndex>0){currentZoomIndex--;zoomImg.src=currentZoomImages[currentZoomIndex];zoomScale=1;zoomImg.style.transform='scale(1)';updateZoomNav();}
