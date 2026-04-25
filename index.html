@@ -72,15 +72,10 @@ ey
 .photo-label svg { width:18px; height:18px; stroke:#3a8dde; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 #photoInput { display:none; }
 #photoPreview { width:100%; border-radius:14px; margin:8px 0 12px; display:none; max-height:170px; object-fit:cover; border:2px solid #3a8dde; }
-.photo-preview-wrapper { display:flex; flex-direction:column; gap:8px; margin-top:10px; }
-.photo-preview-text { display:flex; flex-direction:column; gap:4px; }
-.photo-preview-heading { font-size:13px; font-weight:800; color:#3a8dde; }
-.photo-preview-note { font-size:12px; color:#555; line-height:1.4; }
 .photo-preview-label { font-size:13px; font-weight:800; color:#3a8dde; margin-top:12px; margin-bottom:6px; }
 .photo-preview-grid { display:flex; flex-wrap:wrap; gap:8px; margin:8px 0; }
 .photo-preview-thumb { width:72px; height:72px; border-radius:14px; object-fit:cover; cursor:pointer; border:2px solid transparent; transition:border 0.2s, transform 0.15s; }
 .photo-preview-thumb:hover { transform: translateY(-2px); }
-.photo-preview-thumb.master { border-color:#3a8dde; box-shadow:0 0 0 3px rgba(58,141,222,0.15); }
 
 .row-btns { display:flex; gap:8px; margin-top:14px; }
 .btn-blue { flex:1; background:#3a8dde; color:white; border:none; padding:11px; border-radius:10px; font-weight:700; font-family:'Nunito',sans-serif; font-size:14px; cursor:pointer; transition:background 0.2s; }
@@ -286,13 +281,6 @@ ey
     </label>
     <div style="font-size:12px;color:#555;margin-bottom:8px;">Select more than one image from your gallery if your device supports it.</div>
     <input type="file" id="photoInput" accept="image/*" multiple>
-    <div id="photoPreviewArea" class="photo-preview-wrapper" style="display:none">
-      <img id="photoPreview" alt="Master image preview">
-      <div class="photo-preview-text">
-        <div class="photo-preview-heading">Master image</div>
-        <div class="photo-preview-note">The image with the blue outline is the master image. It is the one shown on the post before someone opens the full gallery. Tap another thumbnail below to choose a different master image.</div>
-      </div>
-    </div>
     <div class="photo-preview-label">Selected images</div>
     <div id="photoPreviewGrid" class="photo-preview-grid"></div>
     <div class="row-btns">
@@ -482,7 +470,7 @@ waitForFirebase(function(firebaseAvailable) {
 
   var lsElm=document.getElementById("loadingScreen"); if(lsElm) lsElm.style.display="none";
 
-  var currentUser=null,currentCat="all",currentPhotos=[],currentMasterIndex=0,allItems=[],authMode="login",activeChatId=null,chatRef=null,conversations=[],currentZoomImages=[],currentZoomIndex=0;
+  var currentUser=null,currentCat="all",currentPhotos=[],allItems=[],authMode="login",activeChatId=null,chatRef=null,conversations=[],currentZoomImages=[],currentZoomIndex=0;
 
   function toast(msg){var t=document.getElementById("toast");if(!t)return;t.textContent=msg;t.classList.add("show");setTimeout(function(){t.classList.remove("show");},2800);}
   function openM(id){var e=document.getElementById(id);if(e)e.classList.add("open");}
@@ -533,11 +521,10 @@ waitForFirebase(function(firebaseAvailable) {
   var searchEl=document.getElementById("search");
   if(searchEl)searchEl.addEventListener("input",render);
 
-  var photoIn=document.getElementById("photoInput");
   if(photoIn)photoIn.addEventListener("change",function(e){
     var files=Array.prototype.slice.call(e.target.files||[]);
     if(!files.length){return;}
-    currentPhotos=[];currentMasterIndex=0;
+    currentPhotos=[];openM("postModal");
     var readers=files.map(function(file){
       return new Promise(function(resolve,reject){
         var reader=new FileReader();
@@ -565,30 +552,18 @@ waitForFirebase(function(firebaseAvailable) {
   });
 
   function renderPhotoPreview(){
-    var previewArea=document.getElementById("photoPreviewArea");
-    var preview=document.getElementById("photoPreview");
     var grid=document.getElementById("photoPreviewGrid");
-    if(!previewArea||!preview||!grid){return;}
+    if(!grid){return;}
     if(!currentPhotos||!currentPhotos.length){
-      previewArea.style.display="none";
-      preview.style.display="none";
-      preview.src="";
       grid.innerHTML="";
       return;
     }
-    previewArea.style.display="flex";
-    preview.src=currentPhotos[currentMasterIndex];
-    preview.style.display="block";
     grid.innerHTML="";
     currentPhotos.forEach(function(src,idx){
       var thumb=document.createElement("img");
-      thumb.className="photo-preview-thumb"+(idx===currentMasterIndex?" master":"");
+      thumb.className="photo-preview-thumb";
       thumb.src=src;
       thumb.alt="Photo "+(idx+1);
-      thumb.addEventListener("click",function(){
-        currentMasterIndex=idx;
-        renderPhotoPreview();
-      });
       grid.appendChild(thumb);
     });
   }
@@ -652,11 +627,9 @@ waitForFirebase(function(firebaseAvailable) {
   function openPostModal(){
     var t=document.getElementById("titleIn");if(t)t.value="";
     var p=document.getElementById("priceIn");if(p)p.value="";
-    var area=document.getElementById("photoPreviewArea");if(area)area.style.display="none";
-    var pp=document.getElementById("photoPreview");if(pp){pp.style.display="none";pp.src="";}
     var grid=document.getElementById("photoPreviewGrid");if(grid)grid.innerHTML="";
     var pi=document.getElementById("photoInput");if(pi)pi.value="";
-    currentPhotos=[];currentMasterIndex=0;openM("postModal");
+    currentPhotos=[];openM("postModal");
   }
 
   function submitPost(){
@@ -668,7 +641,7 @@ waitForFirebase(function(firebaseAvailable) {
     var btn=document.getElementById("submitPost");
     if(btn){btn.disabled=true;btn.textContent="Posting...";}
     if(!db||!db.ref){toast("Cannot post: backend not available.");if(btn){btn.disabled=false;btn.textContent="Post";}return;}
-    db.ref("items").push({title:title,price:price,category:cat,photos:currentPhotos||[],photo:currentPhotos[currentMasterIndex]||null,uid:currentUser.uid,postedBy:currentUser.displayName||currentUser.email,createdAt:Date.now()})
+    db.ref("items").push({title:title,price:price,category:cat,photos:currentPhotos||[],photo:currentPhotos[0]||null,uid:currentUser.uid,postedBy:currentUser.displayName||currentUser.email,createdAt:Date.now()})
     .then(function(){toast("Item posted! ✓");closeM("postModal");})
     .catch(function(err){toast("Error: "+(err&&err.message?err.message:err));})
     .finally(function(){if(btn){btn.disabled=false;btn.textContent="Post";}});
