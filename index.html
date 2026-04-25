@@ -521,6 +521,7 @@ waitForFirebase(function(firebaseAvailable) {
   var searchEl=document.getElementById("search");
   if(searchEl)searchEl.addEventListener("input",render);
 
+  var photoIn=document.getElementById("photoInput");
   if(photoIn)photoIn.addEventListener("change",function(e){
     var files=Array.prototype.slice.call(e.target.files||[]);
     if(!files.length){return;}
