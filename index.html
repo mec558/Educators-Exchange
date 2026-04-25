@@ -39,10 +39,10 @@ ey
 .delete-btn { position:absolute; top:14px; right:14px; background:rgba(255,70,70,0.92); border:none; color:white; border-radius:50%; width:26px; height:26px; font-size:13px; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 6px rgba(255,80,80,0.3); transition:background 0.2s; z-index:2; }
 .delete-btn:hover { background:#e02020; }
 .deal-btn { display:block; width:100%; margin-top:8px; background:linear-gradient(135deg,#3a8dde,#5ba8f5); color:white; border:none; border-radius:12px; padding:8px 0; font-size:13px; font-weight:800; cursor:pointer; font-family:'Nunito',sans-serif; transition:opacity 0.2s; box-shadow:0 3px 10px rgba(58,141,222,0.3); }
-.deal-btn:hover { opacity:0.88; }
-.own-btn { display:block; width:100%; margin-top:8px; background:#ddd; color:white; border:none; border-radius:12px; padding:8px 0; font-size:13px; font-weight:800; font-family:'Nunito',sans-serif; cursor:default; }
-
-.fab { position:fixed; bottom:80px; right:20px; background:#3a8dde; color:white; font-size:25px; border:none; border-radius:50%; width:55px; height:55px; cursor:pointer; box-shadow:0 4px 15px rgba(58,141,222,0.4); z-index:100; transition:transform 0.2s; }
+.card-btns { display: flex; gap: 8px; margin-top: 8px; }
+.deal-btn { width: auto; flex: 1; }
+.own-btn { width: auto; flex: 1; }
+.eye-btn { display:flex; align-items:center; justify-content:center; flex: 0 0 42px; background: #eef3f9; border: none; color: #3a8dde; width: 42px; height: 42px; padding: 0; border-radius: 12px; cursor: pointer; transition: background 0.2s; }
 .fab:hover { transform:scale(1.1); }
 
 .bottom-nav { position:fixed; bottom:0; width:100%; background:rgba(58,141,222,0.18); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border-top:1px solid rgba(58,141,222,0.2); display:flex; justify-content:space-around; padding:10px 0 12px; z-index:200; }
@@ -546,11 +546,21 @@ waitForFirebase(function(firebaseAvailable) {
         var db_btn=document.createElement("button");db_btn.className="delete-btn";db_btn.title="Delete";db_btn.innerHTML="&#x2715;";
         db_btn.addEventListener("click",(function(id){return function(){deleteItem(id);};})(item.id));
         card.appendChild(db_btn);
-        var ob=document.createElement("button");ob.className="own-btn";ob.textContent="Your Listing";card.appendChild(ob);
+        var btns = document.createElement("div"); btns.className = "card-btns";
+        var ob=document.createElement("button");ob.className="own-btn";ob.textContent="Your Listing"; btns.appendChild(ob);
+        var eye = document.createElement("button"); eye.className = "eye-btn"; eye.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>'; eye.title = "View Full Image";
+        eye.addEventListener("click", (function(src){return function(){ zoomImg.src = src; zoomModal.style.display = 'flex'; zoomScale = 1; zoomImg.style.transform = 'scale(1)'; }; })(imgSrc));
+        btns.appendChild(eye);
+        card.appendChild(btns);
       } else {
+        var btns = document.createElement("div"); btns.className = "card-btns";
         var deal=document.createElement("button");deal.className="deal-btn";deal.innerHTML="&#x1F4AC; Make a Deal";
         deal.addEventListener("click",(function(id){return function(){startDeal(id);};})(item.id));
-        card.appendChild(deal);
+        btns.appendChild(deal);
+        var eye = document.createElement("button"); eye.className = "eye-btn"; eye.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>'; eye.title = "View Full Image";
+        eye.addEventListener("click", (function(src){return function(){ zoomImg.src = src; zoomModal.style.display = 'flex'; zoomScale = 1; zoomImg.style.transform = 'scale(1)'; }; })(imgSrc));
+        btns.appendChild(eye);
+        card.appendChild(btns);
       }
       grid.appendChild(card);
     });
@@ -787,7 +797,7 @@ waitForFirebase(function(firebaseAvailable) {
   const resetZoomBtn = document.getElementById('resetZoomBtn');
   let zoomScale = 1;
 
-  document.querySelectorAll('.card img, .cibar img').forEach(img => {
+  document.querySelectorAll('.cibar img').forEach(img => {
     img.addEventListener('click', function() {
       zoomImg.src = this.src;
       zoomModal.style.display = 'flex';
