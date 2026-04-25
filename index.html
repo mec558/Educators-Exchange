@@ -668,7 +668,7 @@ waitForFirebase(function(firebaseAvailable) {
     var btn=document.getElementById("submitPost");
     if(btn){btn.disabled=true;btn.textContent="Posting...";}
     if(!db||!db.ref){toast("Cannot post: backend not available.");if(btn){btn.disabled=false;btn.textContent="Post";}return;}
-    db.ref("items").push({title:title,price:price,category:cat,photos:currentPhotos||[],photo:currentPhotos[0]||null,uid:currentUser.uid,postedBy:currentUser.displayName||currentUser.email,createdAt:Date.now()})
+    db.ref("items").push({title:title,price:price,category:cat,photos:currentPhotos||[],photo:currentPhotos[currentMasterIndex]||null,uid:currentUser.uid,postedBy:currentUser.displayName||currentUser.email,createdAt:Date.now()})
     .then(function(){toast("Item posted! ✓");closeM("postModal");})
     .catch(function(err){toast("Error: "+(err&&err.message?err.message:err));})
     .finally(function(){if(btn){btn.disabled=false;btn.textContent="Post";}});
