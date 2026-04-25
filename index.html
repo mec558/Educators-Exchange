@@ -129,7 +129,7 @@ ey
 .iempty { text-align:center; color:#bbb; font-size:14px; padding:40px 20px; line-height:1.7; }
 
 .cbox { background:white; width:360px; border-radius:20px; box-shadow:0 20px 60px rgba(0,0,0,0.15); max-height:92vh; display:flex; flex-direction:column; overflow:hidden; }
-.cbox.fullscreen { position:fixed; top:0; left:0; width:100%; height:100vh; border-radius:0; max-height:none; z-index:10000; }
+.cbox.fullscreen { position:fixed; top:0; left:0; width:100%; height:100vh; border-radius:0; max-height:none; z-index:10000; overflow:auto; }
 .cbox.fullscreen .cmsgs { padding:18px 20px; }
 .chdr { padding:14px 16px; border-bottom:1px solid #f0f4f9; display:flex; align-items:center; gap:10px; flex-shrink:0; }
 .cav { width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; color:white; font-weight:800; flex-shrink:0; }
@@ -168,6 +168,14 @@ ey
 #loadingScreen p { color:#888; font-size:13px; }
 .spin { width:40px; height:40px; border:4px solid #eef3f9; border-top-color:#3a8dde; border-radius:50%; animation:spin 0.8s linear infinite; margin-bottom:16px; }
 @keyframes spin { to { transform:rotate(360deg); } }
+
+#imageZoomModal { background: rgba(0,0,0,0.9); }
+.zoom-modal-content { position: relative; width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; }
+#zoomImage { width: 100%; height: 100%; object-fit: contain; transition: transform 0.2s; }
+#closeZoom { position: absolute; top: 10px; right: 10px; color: white; font-size: 30px; cursor: pointer; background: rgba(0,0,0,0.5); padding: 5px 10px; border-radius: 5px; z-index: 10002; }
+.zoom-controls { position: absolute; bottom: 20px; right: 20px; display: flex; gap: 10px; }
+.zoom-controls button { padding: 10px; background: rgba(0,0,0,0.7); color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+.zoom-controls button:hover { background: rgba(0,0,0,0.9); }
 </style>
 </head>
 <body>
@@ -181,27 +189,18 @@ ey
 <div class="header">
   <!-- LOGO: book + handshake -->
   <svg class="logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-    <path d="M50 8 C50 8 18 14 15 22 L15 58 C15 76 32 90 50 96 C68 90 85 76 85 58 L85 22 C82 14 50 8 50 8Z" fill="#1a5fa8"/>
-    <path d="M22 38 C22 32 28 27 36 26 L50 24 L50 74 L36 76 C29 77 22 72 22 66Z" fill="#3a8dde"/>
-    <path d="M78 38 C78 32 72 27 64 26 L50 24 L50 74 L64 76 C71 77 78 72 78 66Z" fill="#5ba8f5"/>
-    <line x1="50" y1="24" x2="50" y2="74" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
-    <line x1="28" y1="42" x2="46" y2="41" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
-    <line x1="28" y1="49" x2="46" y2="48" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
-    <line x1="54" y1="41" x2="72" y2="42" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
-    <line x1="54" y1="48" x2="72" y2="49" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
-    <path d="M22 62 C22 58 25 55 29 54 L42 53 L43 57 L31 58 C29 58 27 60 27 62 L27 72 L22 72Z" fill="#f0c040"/>
-    <ellipse cx="43" cy="63" rx="10" ry="7" fill="#f0c040" transform="rotate(-15 43 63)"/>
-    <rect x="44" y="54" width="5" height="9" rx="2.5" fill="#f0c040" transform="rotate(-10 46 58)"/>
-    <rect x="49" y="55" width="5" height="8" rx="2.5" fill="#f0c040" transform="rotate(-3 51 59)"/>
-    <rect x="54" y="57" width="4" height="7" rx="2" fill="#f0c040"/>
-    <ellipse cx="39" cy="57" rx="3.5" ry="5" fill="#e8b030" transform="rotate(-30 39 57)"/>
-    <path d="M78 62 C78 58 75 55 71 54 L58 53 L57 57 L69 58 C71 58 73 60 73 62 L73 72 L78 72Z" fill="#2abba8"/>
-    <ellipse cx="57" cy="63" rx="10" ry="7" fill="#2abba8" transform="rotate(15 57 63)"/>
-    <rect x="51" y="54" width="5" height="9" rx="2.5" fill="#2abba8" transform="rotate(10 54 58)"/>
-    <rect x="46" y="55" width="5" height="8" rx="2.5" fill="#2abba8" transform="rotate(3 49 59)"/>
-    <rect x="42" y="57" width="4" height="7" rx="2" fill="#2abba8"/>
-    <ellipse cx="61" cy="57" rx="3.5" ry="5" fill="#1fa898" transform="rotate(30 61 57)"/>
-    <path d="M50 12 L52 18 L58 18 L53 22 L55 28 L50 24 L45 28 L47 22 L42 18 L48 18Z" fill="#FFD700"/>
+    <path d="M50 10 C30 10 20 20 20 30 L20 70 C20 80 30 90 50 90 C70 90 80 80 80 70 L80 30 C80 20 70 10 50 10Z" fill="#1a5fa8"/>
+    <path d="M25 35 L45 35 L45 75 L25 75 Z" fill="#fff"/>
+    <path d="M55 35 L75 35 L75 75 L55 75 Z" fill="#fff"/>
+    <line x1="50" y1="35" x2="50" y2="75" stroke="#1a5fa8" stroke-width="2"/>
+    <ellipse cx="42" cy="55" rx="8" ry="12" fill="#FDBCB4" transform="rotate(-10 42 55)"/>
+    <rect x="38" y="50" width="3" height="10" fill="#FDBCB4" transform="rotate(-10 39.5 55)"/>
+    <rect x="41" y="48" width="3" height="12" fill="#FDBCB4" transform="rotate(-5 42.5 54)"/>
+    <rect x="44" y="46" width="3" height="14" fill="#FDBCB4" transform="rotate(0 45.5 53)"/>
+    <ellipse cx="58" cy="55" rx="8" ry="12" fill="#FDBCB4" transform="rotate(10 58 55)"/>
+    <rect x="59" y="50" width="3" height="10" fill="#FDBCB4" transform="rotate(10 60.5 55)"/>
+    <rect x="56" y="48" width="3" height="12" fill="#FDBCB4" transform="rotate(5 57.5 54)"/>
+    <rect x="53" y="46" width="3" height="14" fill="#FDBCB4" transform="rotate(0 54.5 53)"/>
   </svg>
   <h1>Educators Exchange</h1>
   <button class="help-btn" id="helpBtnTop">Help</button>
@@ -368,6 +367,19 @@ ey
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- IMAGE ZOOM MODAL -->
+<div id="imageZoomModal" class="modal">
+  <div class="zoom-modal-content">
+    <span class="close" id="closeZoom">&times;</span>
+    <img id="zoomImage" src="" alt="Zoomed Image">
+    <div class="zoom-controls">
+      <button id="zoomInBtn">+</button>
+      <button id="zoomOutBtn">-</button>
+      <button id="resetZoomBtn">Reset</button>
+    </div>
+  </div>
+</div>
 
 <script>
 var AVATAR_COLORS = {
@@ -764,6 +776,49 @@ waitForFirebase(function(firebaseAvailable) {
   }
 
   function timeAgo(ts){if(!ts)return "";var s=Math.floor((Date.now()-ts)/1000);if(s<60)return "now";if(s<3600)return Math.floor(s/60)+"m";if(s<86400)return Math.floor(s/3600)+"h";return Math.floor(s/86400)+"d";}
+
+  // Image zoom feature
+  const zoomModal = document.getElementById('imageZoomModal');
+  const zoomImg = document.getElementById('zoomImage');
+  const closeZoom = document.getElementById('closeZoom');
+  const zoomInBtn = document.getElementById('zoomInBtn');
+  const zoomOutBtn = document.getElementById('zoomOutBtn');
+  const resetZoomBtn = document.getElementById('resetZoomBtn');
+  let zoomScale = 1;
+
+  document.querySelectorAll('.card img').forEach(img => {
+    img.addEventListener('click', function() {
+      zoomImg.src = this.src;
+      zoomModal.style.display = 'flex';
+      zoomScale = 1;
+      zoomImg.style.transform = 'scale(1)';
+    });
+  });
+
+  closeZoom.addEventListener('click', function() {
+    zoomModal.style.display = 'none';
+  });
+
+  zoomInBtn.addEventListener('click', function() {
+    zoomScale += 0.2;
+    zoomImg.style.transform = `scale(${zoomScale})`;
+  });
+
+  zoomOutBtn.addEventListener('click', function() {
+    zoomScale = Math.max(0.2, zoomScale - 0.2);
+    zoomImg.style.transform = `scale(${zoomScale})`;
+  });
+
+  resetZoomBtn.addEventListener('click', function() {
+    zoomScale = 1;
+    zoomImg.style.transform = 'scale(1)';
+  });
+
+  zoomModal.addEventListener('click', function(e) {
+    if (e.target === zoomModal) {
+      zoomModal.style.display = 'none';
+    }
+  });
 
 }); // end waitForFirebase
 </script>
