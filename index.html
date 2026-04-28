@@ -95,7 +95,7 @@ ey
 .help-p { font-size:13px; color:#555; line-height:1.6; margin-bottom:8px; }
 .help-item { display:flex; align-items:flex-start; gap:10px; padding:10px 0; border-bottom:1px solid #f0f4f9; font-size:13px; color:#444; }
 .help-item:last-of-type { border-bottom:none; }
-.hi { font-size:20px; flex-shrink:0; }
+.hi { width:20px; height:20px; flex-shrink:0; color:#3a8dde; }
 .help-item strong { display:block; font-weight:700; font-size:13px; }
 
 .p-avatar { width:72px; height:72px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:28px; color:white; font-weight:800; margin:0 auto 10px; }
@@ -130,6 +130,15 @@ ey
 .itime { font-size:11px; color:#bbb; flex-shrink:0; }
 .udot { width:9px; height:9px; background:#3a8dde; border-radius:50%; flex-shrink:0; }
 .iempty { text-align:center; color:#bbb; font-size:14px; padding:40px 20px; line-height:1.7; }
+
+.item-detail-img { width:100%; border-radius:14px; max-height:220px; object-fit:cover; margin-bottom:14px; cursor:pointer; }
+.item-detail-title { font-size:18px; font-weight:800; color:#222; margin-bottom:6px; }
+.item-detail-price { font-size:20px; font-weight:800; color:#3a8dde; margin-bottom:10px; }
+.item-detail-by { font-size:12px; color:#888; margin-bottom:14px; }
+.item-detail-cat { display:inline-block; background:#eef3f9; color:#3a8dde; font-size:11px; font-weight:700; padding:4px 10px; border-radius:8px; margin-bottom:14px; }
+.item-detail-desc { font-size:13px; color:#555; line-height:1.6; margin-bottom:14px; padding:12px; background:#f8fbff; border-radius:10px; border-left:3px solid #3a8dde; }
+.item-detail-empty { color:#bbb; font-size:13px; font-style:italic; }
+.item-detail-divider { border:none; border-top:1.5px solid #f0f4f9; margin:14px 0; }
 
 .cbox { background:white; width:360px; border-radius:20px; box-shadow:0 20px 60px rgba(0,0,0,0.15); max-height:92vh; display:flex; flex-direction:column; overflow:hidden; }
 .cbox.fullscreen { position:fixed; top:0; left:0; width:100%; height:100vh; border-radius:0; max-height:none; z-index:10000; overflow:auto; }
@@ -188,6 +197,26 @@ ey
   .zoom-controls button { padding: 10px 12px; min-width: 44px; font-size: 13px; background: rgba(255,255,255,0.95); color: #b71c1c; border-color: rgba(0,0,0,0.12); }
   .zoom-controls { gap: 8px; }
 }
+
+/* Welcome Page Animations */
+@keyframes slideInUp { from { opacity:0; transform:translateY(60px); } to { opacity:1; transform:translateY(0); } }
+@keyframes profileFlyIn { from { opacity:0; transform:translate(-150vw, -150vh) scale(0.3); } to { opacity:1; transform:translate(0, 0) scale(1); } }
+@keyframes float { 0%, 100% { transform:translateY(0px); } 50% { transform:translateY(-15px); } }
+
+#welcomeModal { background:linear-gradient(135deg, #e8f2ff 0%, #f0f7ff 100%); }
+.welcome-box { background:white; padding:40px 30px; width:340px; border-radius:25px; box-shadow:0 20px 60px rgba(0,0,0,0.15); text-align:center; max-height:90vh; overflow-y:auto; display:flex; flex-direction:column; gap:20px; animation:slideInUp 0.6s ease-out; }
+.welcome-avatar { width:120px; height:120px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:56px; color:white; font-weight:800; margin:0 auto; box-shadow:0 8px 20px rgba(58,141,222,0.25); animation:profileFlyIn 1.2s cubic-bezier(0.34, 1.56, 0.64, 1), float 3s ease-in-out 1.2s infinite; }
+.welcome-title { font-size:24px; font-weight:800; color:#222; margin:10px 0 5px; }
+.welcome-subtitle { font-size:13px; color:#888; line-height:1.6; margin-bottom:8px; }
+.welcome-features { display:flex; flex-direction:column; gap:12px; margin:15px 0; }
+.welcome-feature { display:flex; align-items:center; gap:10px; font-size:13px; color:#555; padding:10px; background:#f8fbff; border-radius:12px; border-left:3px solid #3a8dde; text-align:left; }
+.welcome-feature-icon { width:24px; height:24px; flex-shrink:0; color:#3a8dde; }
+.welcome-btns { display:flex; gap:10px; flex-direction:column; margin-top:10px; }
+.btn-welcome { width:100%; padding:12px; border:none; border-radius:12px; font-weight:700; font-family:'Nunito',sans-serif; font-size:14px; cursor:pointer; transition:all 0.3s; }
+.btn-welcome-primary { background:linear-gradient(135deg,#3a8dde,#5ba8f5); color:white; box-shadow:0 4px 15px rgba(58,141,222,0.3); }
+.btn-welcome-primary:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(58,141,222,0.4); }
+.btn-welcome-secondary { background:#eef3f9; color:#3a8dde; }
+.btn-welcome-secondary:hover { background:#d9eaf8; }
 </style>
 </head>
 <body>
@@ -266,6 +295,7 @@ ey
     </div>
     <input class="field" id="titleIn" placeholder="Title">
     <input class="field" id="priceIn" placeholder="Price (e.g. 5.00)">
+    <textarea class="field" id="descIn" placeholder="Item description" style="resize:vertical; min-height:80px;"></textarea>
     <select class="field" id="catIn">
       <option value="setup">Setup</option>
       <option value="curriculum">Curriculum</option>
@@ -293,14 +323,29 @@ ey
   <div class="mbox">
     <div class="mhdr">
       <button class="back-btn" id="closeHelp"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Back</button>
-      <h3>&#128075; How can we help?</h3>
+      <h3>How can we help?</h3>
     </div>
     <p class="help-p">Welcome to <strong>Educators Exchange</strong> — share, sell, and discover classroom resources.</p>
-    <div class="help-item"><span class="hi">&#128717;</span><div><strong>Browsing</strong>Use categories to filter or search for something specific.</div></div>
-    <div class="help-item"><span class="hi">&#10133;</span><div><strong>Posting</strong>Tap + or Post. You need to be logged in.</div></div>
-    <div class="help-item"><span class="hi">&#128172;</span><div><strong>Make a Deal</strong>Tap "Make a Deal" on any listing to chat with the seller.</div></div>
-    <div class="help-item"><span class="hi">&#128100;</span><div><strong>Profile</strong>See your listings and delete ones you no longer want.</div></div>
-    <div class="help-item"><span class="hi">&#128231;</span><div><strong>Help</strong>Contact <a href="mailto:educatorexchangehelp@gmail.com" style="color:#3a8dde">educatorexchangehelp@gmail.com</a></div></div>
+    <div class="help-item">
+      <svg class="hi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+      <div><strong>Browsing</strong>Use categories to filter or search for something specific.</div>
+    </div>
+    <div class="help-item">
+      <svg class="hi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><path d="M12 1v6"/><path d="M12 17v6"/><path d="M4.22 4.22l4.24 4.24"/><path d="M15.54 15.54l4.24 4.24"/><path d="M1 12h6"/><path d="M17 12h6"/><path d="M4.22 19.78l4.24-4.24"/><path d="M15.54 8.46l4.24-4.24"/></svg>
+      <div><strong>Posting</strong>Tap + or Post. You need to be logged in.</div>
+    </div>
+    <div class="help-item">
+      <svg class="hi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <div><strong>Make a Deal</strong>Tap "Make a Deal" on any listing to chat with the seller.</div>
+    </div>
+    <div class="help-item">
+      <svg class="hi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><path d="M12 1C6.477 1 2 5.477 2 11c0 5.517 4 10 10 10s10-4.5 10-10-4 9-10 9z"/><path d="M12 14a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+      <div><strong>Profile</strong>See your listings and delete ones you no longer want.</div>
+    </div>
+    <div class="help-item">
+      <svg class="hi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/></svg>
+      <div><strong>Help</strong>Contact <a href="mailto:helpeducators.exchange@gmail.com" style="color:#3a8dde">helpeducators.exchange@gmail.com</a></div>
+    </div>
     <div class="row-btns" style="margin-top:16px">
       <button class="btn-blue" id="closeHelpOk">Got it!</button>
     </div>
@@ -312,7 +357,7 @@ ey
   <div class="mbox">
     <div class="mhdr">
       <button class="back-btn" id="closeAuth"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Back</button>
-      <h3>&#128274; Account</h3>
+      <h3>Account</h3>
     </div>
     <div class="auth-tabs">
       <div class="auth-tab active" id="tabLogin">Log In</div>
@@ -342,6 +387,17 @@ ey
   </div>
 </div>
 
+<!-- ITEM DETAIL MODAL -->
+<div class="modal" id="itemDetailModal">
+  <div class="mbox wide">
+    <div class="mhdr">
+      <button class="back-btn" id="closeItemDetail"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Back</button>
+      <h3>Item Details</h3>
+    </div>
+    <div id="itemDetailBody"></div>
+  </div>
+</div>
+
 <!-- INBOX MODAL -->
 <div class="modal" id="inboxModal">
   <div class="ibox">
@@ -367,7 +423,7 @@ ey
     </div>
     <div class="cibar" id="chatItemBar"></div>
     <div class="cmsgs" id="chatMsgs"></div>
-    <button class="suggestions-btn" id="suggestionsToggle">💡 Suggestions</button>
+    <button class="suggestions-btn" id="suggestionsToggle"><svg style="width:14px;height:14px;vertical-align:middle;margin-right:5px;" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>Suggestions</button>
     <div class="chips" id="chatChips"></div>
     <div class="cinput-row">
       <input type="text" id="chatInput" placeholder="Type a message...">
@@ -379,6 +435,37 @@ ey
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- WELCOME MODAL -->
+<div class="modal" id="welcomeModal">
+  <div class="welcome-box">
+    <div class="welcome-avatar" id="welcomeAvatar" style="background:linear-gradient(135deg,#3a8dde,#5ba8f5);"><svg viewBox="0 0 24 24" width="56" height="56" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+    <div class="welcome-title">Welcome to<br>Educators Exchange</div>
+    <div class="welcome-subtitle">Share, sell, and discover amazing classroom resources</div>
+    <div class="welcome-features">
+      <div class="welcome-feature">
+        <svg class="welcome-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <div><strong>Browse & Search</strong> — Find resources by category or search</div>
+      </div>
+      <div class="welcome-feature">
+        <svg class="welcome-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L21 3z"/></svg>
+        <div><strong>Post Listings</strong> — Share your items with descriptions</div>
+      </div>
+      <div class="welcome-feature">
+        <svg class="welcome-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <div><strong>Chat with Sellers</strong> — Negotiate and make deals</div>
+      </div>
+      <div class="welcome-feature">
+        <svg class="welcome-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <div><strong>Build Community</strong> — Connect with fellow educators</div>
+      </div>
+    </div>
+    <div class="welcome-btns">
+      <button class="btn-welcome btn-welcome-primary" id="welcomeStartBtn">Get Started</button>
+      <button class="btn-welcome btn-welcome-secondary" id="welcomeSkipBtn">Skip for Now</button>
+    </div>
+  </div>
+</div>
 
 <!-- IMAGE ZOOM MODAL -->
 <div id="imageZoomModal" class="modal">
@@ -467,18 +554,40 @@ waitForFirebase(function(firebaseAvailable) {
 
   var lsElm=document.getElementById("loadingScreen"); if(lsElm) lsElm.style.display="none";
 
-  var currentUser=null,currentCat="all",currentPhotos=[],allItems=[],authMode="login",activeChatId=null,chatRef=null,conversations=[],currentZoomImages=[],currentZoomIndex=0;
+  var currentUser=null,currentCat="all",currentPhotos=[],allItems=[],authMode="login",activeChatId=null,chatRef=null,conversations=[],currentZoomImages=[],currentZoomIndex=0,welcomeShown=false;
 
   function toast(msg){var t=document.getElementById("toast");if(!t)return;t.textContent=msg;t.classList.add("show");setTimeout(function(){t.classList.remove("show");},2800);}
   function openM(id){var e=document.getElementById(id);if(e)e.classList.add("open");}
   function closeM(id){var e=document.getElementById(id);if(e)e.classList.remove("open");}
   var bind=function(id,fn){var el=document.getElementById(id);if(el)el.addEventListener("click",fn);};
 
-  ["postModal","helpModal","authModal","profileModal","inboxModal"].forEach(function(id){
+  function showWelcomeOnce(){
+    if(welcomeShown)return;
+    welcomeShown=true;
+    setTimeout(function(){
+      if(currentUser){
+        var name=currentUser.displayName||currentUser.email;
+        var initials=(name||"").slice(0,2).toUpperCase();
+        var av=document.getElementById("welcomeAvatar");
+        if(av){
+          av.textContent=initials;
+          av.style.background=avatarBg(name);
+          av.style.fontSize="24px";
+          av.style.fontWeight="800";
+          av.style.color="white";
+        }
+      }
+      openM("welcomeModal");
+    },300);
+  }
+
+  ["postModal","helpModal","authModal","profileModal","inboxModal","welcomeModal"].forEach(function(id){
     var el=document.getElementById(id);if(!el)return;
     el.addEventListener("click",function(e){if(e.target.id===id)closeM(id);});
   });
 
+  bind("welcomeStartBtn",function(){closeM("welcomeModal");});
+  bind("welcomeSkipBtn",function(){closeM("welcomeModal");});
   bind("helpBtnTop",function(){openM("helpModal");});
   bind("closeHelp",function(){closeM("helpModal");});
   bind("closeHelpOk",function(){closeM("helpModal");});
@@ -506,6 +615,8 @@ waitForFirebase(function(firebaseAvailable) {
   bind("navPost",openPostModal);
   bind("navMessages",openInbox);
   bind("navProfile",openProfile);
+
+  bind("closeItemDetail",function(){closeM("itemDetailModal");});
 
   document.querySelectorAll(".cat").forEach(function(el){
     el.addEventListener("click",function(){
@@ -567,8 +678,8 @@ waitForFirebase(function(firebaseAvailable) {
   }
 
   if(auth&&typeof auth.onAuthStateChanged==="function"){
-    auth.onAuthStateChanged(function(user){currentUser=user;render();if(user)listenInbox();});
-  } else {currentUser=null;render();}
+    auth.onAuthStateChanged(function(user){currentUser=user;render();if(user)listenInbox();showWelcomeOnce();});
+  } else {currentUser=null;render();showWelcomeOnce();}
 
   function render(){
     var grid=document.getElementById("items");if(!grid)return;
@@ -588,23 +699,24 @@ waitForFirebase(function(firebaseAvailable) {
       var isOwner=currentUser&&currentUser.uid===item.uid;
       var card=document.createElement("div");card.className="card";
       card.innerHTML="<img src='"+imgSrc+"' alt='"+item.title+"'><h3>"+item.title+"</h3><p class='price'>$"+item.price+"</p><p class='card-meta'>"+(item.postedBy||"Anonymous")+"</p>";
+      card.addEventListener("click",(function(i){return function(){openItemDetail(i);};})(item));
       if(isOwner){
-        var db_btn=document.createElement("button");db_btn.className="delete-btn";db_btn.title="Delete";db_btn.innerHTML="&#x2715;";
-        db_btn.addEventListener("click",(function(id){return function(){deleteItem(id);};})(item.id));
+        var db_btn=document.createElement("button");db_btn.className="delete-btn";db_btn.title="Delete";db_btn.innerHTML="<svg viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='3 6 5 6 21 6'/><path d='M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2'/><line x1='10' y1='11' x2='10' y2='17'/><line x1='14' y1='11' x2='14' y2='17'/></svg>";
+        db_btn.addEventListener("click",(function(id){return function(e){e.stopPropagation();deleteItem(id);};})(item.id));
         card.appendChild(db_btn);
         var btns = document.createElement("div"); btns.className = "card-btns";
         var ob=document.createElement("button");ob.className="own-btn";ob.textContent="Your Listing"; btns.appendChild(ob);
         var eye = document.createElement("button"); eye.className = "eye-btn"; eye.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>'; eye.title = "View Images";
-        eye.addEventListener("click",(function(list){return function(){openZoomImages(list,0);};})(photos));
+        eye.addEventListener("click",(function(list){return function(e){e.stopPropagation();openZoomImages(list,0);};})(photos));
         btns.appendChild(eye);
         card.appendChild(btns);
       } else {
         var btns = document.createElement("div"); btns.className = "card-btns";
-        var deal=document.createElement("button");deal.className="deal-btn";deal.innerHTML="&#x1F4AC; Make a Deal";
-        deal.addEventListener("click",(function(id){return function(){startDeal(id);};})(item.id));
+        var deal=document.createElement("button");deal.className="deal-btn";deal.innerHTML="Make a Deal";
+        deal.addEventListener("click",(function(id){return function(e){e.stopPropagation();startDeal(id);};})(item.id));
         btns.appendChild(deal);
         var eye = document.createElement("button"); eye.className = "eye-btn"; eye.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>'; eye.title = "View Images";
-        eye.addEventListener("click",(function(list){return function(){openZoomImages(list,0);};})(photos));
+        eye.addEventListener("click",(function(list){return function(e){e.stopPropagation();openZoomImages(list,0);};})(photos));
         btns.appendChild(eye);
         card.appendChild(btns);
       }
@@ -625,6 +737,7 @@ waitForFirebase(function(firebaseAvailable) {
   function openPostModal(){
     var t=document.getElementById("titleIn");if(t)t.value="";
     var p=document.getElementById("priceIn");if(p)p.value="";
+    var d=document.getElementById("descIn");if(d)d.value="";
     var grid=document.getElementById("photoPreviewGrid");if(grid)grid.innerHTML="";
     var pi=document.getElementById("photoInput");if(pi)pi.value="";
     currentPhotos=[];openM("postModal");
@@ -634,13 +747,14 @@ waitForFirebase(function(firebaseAvailable) {
     if(!currentUser){closeM("postModal");openM("authModal");toast("Please log in to post.");return;}
     var title=(document.getElementById("titleIn")&&document.getElementById("titleIn").value.trim())||"";
     var price=(document.getElementById("priceIn")&&document.getElementById("priceIn").value.trim())||"";
+    var desc=(document.getElementById("descIn")&&document.getElementById("descIn").value.trim())||"";
     var cat=(document.getElementById("catIn")&&document.getElementById("catIn").value)||"setup";
     if(!title||!price){toast("Please fill in title and price.");return;}
     var btn=document.getElementById("submitPost");
     if(btn){btn.disabled=true;btn.textContent="Posting...";}
     if(!db||!db.ref){toast("Cannot post: backend not available.");if(btn){btn.disabled=false;btn.textContent="Post";}return;}
-    db.ref("items").push({title:title,price:price,category:cat,photos:currentPhotos||[],photo:currentPhotos[0]||null,uid:currentUser.uid,postedBy:currentUser.displayName||currentUser.email,createdAt:Date.now()})
-    .then(function(){toast("Item posted! ✓");closeM("postModal");})
+    db.ref("items").push({title:title,price:price,category:cat,description:desc,photos:currentPhotos||[],photo:currentPhotos[0]||null,uid:currentUser.uid,postedBy:currentUser.displayName||currentUser.email,createdAt:Date.now()})
+    .then(function(){toast("Item posted!");closeM("postModal");})
     .catch(function(err){toast("Error: "+(err&&err.message?err.message:err));})
     .finally(function(){if(btn){btn.disabled=false;btn.textContent="Post";}});
   }
@@ -649,7 +763,7 @@ waitForFirebase(function(firebaseAvailable) {
     if(!confirm("Delete this item?"))return;
     if(!db||!db.ref){toast("Cannot delete: backend not available.");return;}
     db.ref("items/"+id).remove()
-    .then(function(){toast("Deleted.");var pm=document.getElementById("profileModal");if(pm&&pm.classList.contains("open"))renderProfile();})
+    .then(function(){toast("Item deleted.");var pm=document.getElementById("profileModal");if(pm&&pm.classList.contains("open"))renderProfile();})
     .catch(function(err){toast("Error: "+(err&&err.message?err.message:err));});
   }
 
@@ -674,7 +788,7 @@ waitForFirebase(function(firebaseAvailable) {
     var p=authMode==="login"
       ?auth.signInWithEmailAndPassword(email,pass)
       :auth.createUserWithEmailAndPassword(email,pass).then(function(cred){return cred.user.updateProfile({displayName:name}).then(function(){return cred;});});
-    p.then(function(){toast(authMode==="login"?"Welcome back! ✓":"Welcome, "+name+"! ✓");closeM("authModal");})
+    p.then(function(){toast(authMode==="login"?"Welcome back!":"Welcome, "+name+"!");closeM("authModal");})
     .catch(function(e){
       var msgs={"auth/user-not-found":"No account with that email.","auth/wrong-password":"Incorrect password.","auth/email-already-in-use":"Email already registered.","auth/weak-password":"Password needs 6+ characters.","auth/invalid-email":"Enter a valid email.","auth/invalid-credential":"Incorrect email or password.","auth/too-many-requests":"Too many attempts. Please wait a moment.","auth/network-request-failed":"Network error. Check your connection."};
       if(err){err.textContent=msgs[e.code]||e.message||e;err.classList.add("show");}
@@ -683,6 +797,28 @@ waitForFirebase(function(firebaseAvailable) {
   }
 
   function openProfile(){renderProfile();openM("profileModal");}
+
+  function openItemDetail(item){
+    if(!item)return;
+    var body=document.getElementById("itemDetailBody");if(!body)return;
+    var photos=(item.photos&&item.photos.length)?item.photos:(item.photo?[item.photo]:[]);
+    var imgHTML=photos.length?"<img src='"+photos[0]+"' class='item-detail-img' alt='"+item.title+"'>":"";
+    var catLabel=item.category?item.category.charAt(0).toUpperCase()+item.category.slice(1):"";
+    var descHTML=item.description?"<div class='item-detail-desc'>"+item.description+"</div>":"<div class='item-detail-desc item-detail-empty'>No description provided</div>";
+    var isOwner=currentUser&&currentUser.uid===item.uid;
+    var actionBtn="";
+    if(!isOwner){
+      actionBtn="<div class='row-btns'><button class='btn-blue' id='detailDealBtn' style='width:100%'>Make a Deal</button></div>";
+    }
+    body.innerHTML=imgHTML+"<div class='item-detail-title'>"+item.title+"</div><div class='item-detail-price'>$"+item.price+"</div><div class='item-detail-by'>By "+((item.postedBy||"Anonymous"))+"</div><div class='item-detail-cat'>"+catLabel+"</div><hr class='item-detail-divider'>"+descHTML+actionBtn;
+    if(!isOwner){
+      var dealBtn=document.getElementById("detailDealBtn");
+      if(dealBtn){
+        dealBtn.addEventListener("click",(function(id){return function(){closeM("itemDetailModal");startDeal(id);};})(item.id));
+      }
+    }
+    openM("itemDetailModal");
+  }
 
   function renderProfile(){
     var body=document.getElementById("profileBody");if(!body)return;
@@ -702,7 +838,7 @@ waitForFirebase(function(firebaseAvailable) {
     var logoutBtn=document.getElementById("logoutBtn");
     if(logoutBtn)logoutBtn.addEventListener("click",function(){
       if(!auth||!auth.signOut){toast("Cannot log out.");closeM("profileModal");return;}
-      auth.signOut().then(function(){toast("Logged out.");closeM("profileModal");}).catch(function(){toast("Error logging out.");});
+      auth.signOut().then(function(){toast("You have been logged out.");closeM("profileModal");}).catch(function(){toast("Error logging out.");});
     });
   }
 
@@ -728,7 +864,7 @@ waitForFirebase(function(firebaseAvailable) {
     var img=item.photo||"https://placehold.co/44x44/eef3f9/3a8dde?text=?";
     var cib=document.getElementById("chatItemBar");
     if(cib)cib.innerHTML="<img src='"+img+"'><div><div class='cibar-t'>"+item.title+"</div><div class='cibar-p'>$"+item.price+"</div></div>";
-    var chipTexts=["Hey! Is this still available?","Would you take a lower price?","Can I see more photos?","I'll take it! 👍","What condition is it in?"];
+    var chipTexts=["Hey! Is this still available?","Would you take a lower price?","Can I see more photos?","I'll take it!","What condition is it in?"];
     var chipsEl=document.getElementById("chatChips");
     if(chipsEl){chipsEl.innerHTML="";chipsEl.classList.remove("show");chipTexts.forEach(function(text){var b=document.createElement("button");b.className="chip";b.textContent=text;b.addEventListener("click",function(){var ci=document.getElementById("chatInput");if(ci){ci.value=text;ci.focus();}});chipsEl.appendChild(b);});}
     var msgsEl=document.getElementById("chatMsgs");if(msgsEl)msgsEl.innerHTML="";
@@ -736,7 +872,7 @@ waitForFirebase(function(firebaseAvailable) {
     openM("chatModal");
     if(!db||!db.ref){toast("Chat history unavailable.");return;}
     // show a one-time tip about fullscreen for this session
-    try{if(!sessionStorage.getItem('chat_fullscreen_tip_shown')){toast('Tip: tap the Back button icon to toggle fullscreen chat.');sessionStorage.setItem('chat_fullscreen_tip_shown','1');}}catch(e){}
+    try{if(!sessionStorage.getItem('chat_fullscreen_tip_shown')){toast('Tip: tap the Back button to toggle fullscreen chat.');sessionStorage.setItem('chat_fullscreen_tip_shown','1');}}catch(e){}
     if(chatRef&&chatRef.off)chatRef.off();
     chatRef=db.ref("chats/"+chatId+"/messages");
     chatRef.on("value",function(snap){
