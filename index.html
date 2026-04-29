@@ -57,6 +57,7 @@ ey
 
 .mbox { background:white; padding:25px 20px; width:320px; border-radius:20px; box-shadow:0 20px 60px rgba(0,0,0,0.15); max-height:90vh; overflow-y:auto; }
 .mbox.wide { width:340px; }
+.mbox.fullscreen { position:fixed; top:0; left:0; width:100%; height:100vh; border-radius:0; max-height:none; z-index:10000; overflow:auto; }
 
 .mhdr { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
 .mhdr h3 { font-size:17px; font-weight:800; color:#222; margin:0; }
@@ -117,6 +118,7 @@ ey
 .p-del:hover { background:#ffe0e0; }
 
 .ibox { background:white; width:340px; border-radius:20px; box-shadow:0 20px 60px rgba(0,0,0,0.15); max-height:90vh; display:flex; flex-direction:column; overflow:hidden; }
+.ibox.fullscreen { position:fixed; top:0; left:0; width:100%; height:100vh; border-radius:0; max-height:none; z-index:10000; overflow:auto; }
 .ihdr { padding:18px 20px 14px; border-bottom:1px solid #f0f4f9; display:flex; align-items:center; gap:10px; flex-shrink:0; }
 .ihdr h3 { font-size:17px; font-weight:800; color:#222; margin:0; flex:1; }
 .ilist { overflow-y:auto; flex:1; }
@@ -460,10 +462,6 @@ ey
         <div><strong>Build Community</strong> — Connect with fellow educators</div>
       </div>
     </div>
-    <div class="welcome-btns">
-      <button class="btn-welcome btn-welcome-primary" id="welcomeStartBtn">Get Started</button>
-      <button class="btn-welcome btn-welcome-secondary" id="welcomeSkipBtn">Skip for Now</button>
-    </div>
   </div>
 </div>
 
@@ -564,21 +562,25 @@ waitForFirebase(function(firebaseAvailable) {
   function showWelcomeOnce(){
     if(welcomeShown)return;
     welcomeShown=true;
-    setTimeout(function(){
-      if(currentUser){
-        var name=currentUser.displayName||currentUser.email;
-        var initials=(name||"").slice(0,2).toUpperCase();
-        var av=document.getElementById("welcomeAvatar");
-        if(av){
+    if(currentUser){
+      var name=currentUser.displayName||currentUser.email;
+      var customAvatar=localStorage.getItem('customAvatar_'+currentUser.uid);
+      var av=document.getElementById("welcomeAvatar");
+      if(av){
+        if(customAvatar){
+          av.innerHTML="<img src='"+customAvatar+"' style='width:120px;height:120px;border-radius:50%;object-fit:cover;' alt='Avatar'>";
+        } else {
+          var initials=(name||"").slice(0,2).toUpperCase();
           av.textContent=initials;
           av.style.background=avatarBg(name);
-          av.style.fontSize="24px";
+          av.style.fontSize="56px";
           av.style.fontWeight="800";
           av.style.color="white";
         }
       }
-      openM("welcomeModal");
-    },300);
+    }
+    openM("welcomeModal");
+    setTimeout(function(){closeM("welcomeModal");},3000);
   }
 
   ["postModal","helpModal","authModal","profileModal","inboxModal","welcomeModal"].forEach(function(id){
@@ -586,8 +588,6 @@ waitForFirebase(function(firebaseAvailable) {
     el.addEventListener("click",function(e){if(e.target.id===id)closeM(id);});
   });
 
-  bind("welcomeStartBtn",function(){closeM("welcomeModal");});
-  bind("welcomeSkipBtn",function(){closeM("welcomeModal");});
   bind("helpBtnTop",function(){openM("helpModal");});
   bind("closeHelp",function(){closeM("helpModal");});
   bind("closeHelpOk",function(){closeM("helpModal");});
@@ -796,7 +796,7 @@ waitForFirebase(function(firebaseAvailable) {
     .finally(function(){if(btn){btn.disabled=false;btn.textContent=authMode==="login"?"Log In":"Sign Up";}});
   }
 
-  function openProfile(){renderProfile();openM("profileModal");}
+  function openProfile(){renderProfile();openM("profileModal"); document.querySelector('#profileModal .mbox').classList.add('fullscreen');}
 
   function openItemDetail(item){
     if(!item)return;
@@ -828,17 +828,39 @@ waitForFirebase(function(firebaseAvailable) {
       return;
     }
     var name=currentUser.displayName||currentUser.email;
-    var initials=(name||"").slice(0,2).toUpperCase();
+    var customAvatar=localStorage.getItem('customAvatar_'+currentUser.uid);
+    var avatarHTML=customAvatar?"<img src='"+customAvatar+"' style='width:72px;height:72px;border-radius:50%;object-fit:cover;' alt='Avatar'>":"<div class='p-avatar' style='background:"+avatarBg(name)+"'>"+(name||"").slice(0,2).toUpperCase()+"</div>";
     var myItems=allItems.filter(function(i){return i.uid===currentUser.uid;});
     var itemsHTML=myItems.length===0
       ?"<p style='color:#bbb;font-size:13px;text-align:center;padding:14px 0'>No listings yet.</p>"
       :myItems.map(function(item){return "<div class='p-item'><img src='"+(item.photo||"https://placehold.co/50x50/eef3f9/3a8dde?text=?")+"'><div class='p-info'><div class='p-title'>"+item.title+"</div><div class='p-price'>$"+item.price+"</div></div><button class='p-del' data-id='"+item.id+"'>Delete</button></div>";}).join("");
-    body.innerHTML="<div class='p-avatar' style='background:"+avatarBg(name)+"'>"+initials+"</div><div class='p-name'>"+name+"</div><div class='p-email'>"+(currentUser.email||"")+"</div><div class='p-stats'><div class='stat'><div class='stat-n'>"+myItems.length+"</div><div class='stat-l'>My Posts</div></div></div><hr class='p-div'><div class='p-sec'>My Listings</div>"+itemsHTML+"<button class='btn-red' id='logoutBtn'>Log Out</button>";
+    body.innerHTML=avatarHTML+"<div class='p-name'>"+name+"</div><div class='p-email'>"+(currentUser.email||"")+"</div><label class='photo-label' for='profilePhotoInput' style='margin:10px 0;width:fit-content;'><svg viewBox='0 0 24 24'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><polyline points='21 15 16 10 5 21'/></svg>Change Profile Picture</label><input type='file' id='profilePhotoInput' accept='image/*' style='display:none;'><div class='p-stats'><div class='stat'><div class='stat-n'>"+myItems.length+"</div><div class='stat-l'>My Posts</div></div></div><hr class='p-div'><div class='p-sec'>My Listings</div>"+itemsHTML+"<button class='btn-red' id='logoutBtn'>Log Out</button>";
     body.querySelectorAll(".p-del").forEach(function(btn){btn.addEventListener("click",function(){deleteItem(btn.dataset.id);});});
     var logoutBtn=document.getElementById("logoutBtn");
     if(logoutBtn)logoutBtn.addEventListener("click",function(){
       if(!auth||!auth.signOut){toast("Cannot log out.");closeM("profileModal");return;}
       auth.signOut().then(function(){toast("You have been logged out.");closeM("profileModal");}).catch(function(){toast("Error logging out.");});
+    });
+    var photoIn=document.getElementById("profilePhotoInput");
+    if(photoIn)photoIn.addEventListener("change",function(e){
+      var file=e.target.files[0];if(!file)return;
+      var reader=new FileReader();
+      reader.onload=function(ev){
+        var img=new Image();
+        img.onload=function(){
+          var canvas=document.createElement("canvas");
+          var MAX=200,w=img.width,h=img.height;
+          if(w>MAX){h=h*MAX/w;w=MAX;}if(h>MAX){w=w*MAX/h;h=MAX;}
+          canvas.width=w;canvas.height=h;
+          canvas.getContext("2d").drawImage(img,0,0,w,h);
+          var dataURL=canvas.toDataURL("image/jpeg",0.8);
+          localStorage.setItem('customAvatar_'+currentUser.uid,dataURL);
+          renderProfile();
+          toast("Profile picture updated!");
+        };
+        img.src=ev.target.result;
+      };
+      reader.readAsDataURL(file);
     });
   }
 
@@ -857,8 +879,17 @@ waitForFirebase(function(firebaseAvailable) {
     activeChatId=chatId;
     var isSeller=currentUser&&currentUser.uid===item.uid;
     var otherName=isSeller?(item.buyerName||"Buyer"):(item.postedBy||"Seller");
+    var otherUid=isSeller?item.buyerId:item.uid;
+    var customAvatar=localStorage.getItem('customAvatar_'+otherUid);
     var av=document.getElementById("chatAv");
-    if(av){av.textContent=(otherName||"??").slice(0,2).toUpperCase();av.style.background=avatarBg(otherName);}
+    if(av){
+      if(customAvatar){
+        av.innerHTML="<img src='"+customAvatar+"' style='width:38px;height:38px;border-radius:50%;object-fit:cover;' alt='Avatar'>";
+      } else {
+        av.textContent=(otherName||"??").slice(0,2).toUpperCase();
+        av.style.background=avatarBg(otherName);
+      }
+    }
     var cn=document.getElementById("chatName");if(cn)cn.textContent=otherName;
     var cs=document.getElementById("chatSub");if(cs)cs.textContent="Re: "+item.title;
     var img=item.photo||"https://placehold.co/44x44/eef3f9/3a8dde?text=?";
@@ -891,7 +922,7 @@ waitForFirebase(function(firebaseAvailable) {
     if(db.ref("chats/"+chatId+"/meta").update){db.ref("chats/"+chatId+"/meta").update({["unread_"+(currentUser&&currentUser.uid)]:0});}
   }
 
-  function closeChat(){if(chatRef&&chatRef.off){chatRef.off();chatRef=null;}activeChatId=null;closeM("chatModal");var box=document.querySelector('.cbox');if(box)box.classList.remove('fullscreen');}
+  function closeChat(){if(chatRef&&chatRef.off){chatRef.off();chatRef=null;}activeChatId=null;closeM("chatModal");var box=document.querySelector('.cbox');if(box)box.classList.remove('fullscreen'); openInbox();}
 
   function toggleChatFullscreen(){
     var box=document.querySelector(".cbox"); if(!box) return; box.classList.toggle("fullscreen");
@@ -950,7 +981,7 @@ waitForFirebase(function(firebaseAvailable) {
     });
   }
 
-  function openInbox(){renderInbox();openM("inboxModal");}
+  function openInbox(){renderInbox();openM("inboxModal"); document.querySelector('.ibox').classList.add('fullscreen');}
 
   function renderInbox(){
     var list=document.getElementById("inboxList");if(!list)return;
@@ -960,9 +991,12 @@ waitForFirebase(function(firebaseAvailable) {
     conversations.forEach(function(c){
       var isSeller=c.sellerId===(currentUser&&currentUser.uid);
       var other=isSeller?c.buyerName:c.sellerName;
-      var init=(other||"?").slice(0,2).toUpperCase();
+      var otherUid=isSeller?c.buyerId:c.sellerId;
+      var customAvatar=localStorage.getItem('customAvatar_'+otherUid);
+      var initHTML=customAvatar?"<img src='"+customAvatar+"' style='width:44px;height:44px;border-radius:50%;object-fit:cover;' alt='Avatar'>":(other||"?").slice(0,2).toUpperCase();
+      var bg=customAvatar?"":"background:"+avatarBg(other)+";";
       var row=document.createElement("div");row.className="irow";
-      row.innerHTML="<div class='iav' style='background:"+avatarBg(other)+"'>"+init+"</div><div class='iinfo'><div class='iname'>"+(other||"User")+"</div><div class='iprev'>"+(c.lastMessage||"Conversation started")+"</div></div><div style='display:flex;flex-direction:column;align-items:flex-end;gap:5px'><div class='itime'>"+timeAgo(c.updatedAt)+"</div>"+(c.unread>0?"<div class='udot'></div>":"")+"</div>";
+      row.innerHTML="<div class='iav' style='"+bg+"'>"+initHTML+"</div><div class='iinfo'><div class='iname'>"+(other||"User")+"</div><div class='iprev'>"+(c.lastMessage||"Conversation started")+"</div></div><div style='display:flex;flex-direction:column;align-items:flex-end;gap:5px'><div class='itime'>"+timeAgo(c.updatedAt)+"</div>"+(c.unread>0?"<div class='udot'></div>":"")+"</div>";
       row.addEventListener("click",(function(conv){return function(){var fake={id:conv.itemId,title:conv.itemTitle,price:conv.itemPrice,photo:conv.itemPhoto,uid:conv.sellerId,postedBy:conv.sellerName,buyerName:conv.buyerName};closeM("inboxModal");openChat(conv.id,fake);};})(c));
       list.appendChild(row);
     });
