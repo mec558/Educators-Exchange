@@ -14,14 +14,12 @@
 * { margin:0; padding:0; box-sizing:border-box; font-family:'Nunito',sans-serif; }
 body { background:#f2f6fc; padding-bottom:80px; }
 
-/* ONLY CHANGE: padding reduced + logo-svg class added */
 .header { padding:10px 20px; background:white; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 10px rgba(0,0,0,0.05); position:relative; }
 .header h1 { color:#3a8dde; font-size:20px; font-weight:800; position:absolute; left:50%; transform:translateX(-50%); }
 .logo-svg { width:40px; height:40px; flex-shrink:0; z-index:1; }
 .help-btn { margin-left:auto; background:#eef3f9; border:none; color:#3a8dde; font-weight:700; font-size:13px; padding:7px 14px; border-radius:20px; cursor:pointer; font-family:'Nunito',sans-serif; transition:background 0.2s; }
 .help-btn:hover { background:#d9eaf8; }
-ey 
-.search-container { padding:10px 20px; background:white; }
+
 .search-container input { width:100%; padding:12px 16px; border-radius:15px; border:none; background:#eef3f9; font-family:'Nunito',sans-serif; font-size:14px; outline:none; }
 
 .categories { display:flex; overflow-x:auto; padding:10px; gap:10px; scrollbar-width:none; }
@@ -42,7 +40,9 @@ ey
 .card-btns { display: flex; gap: 8px; margin-top: 8px; }
 .deal-btn { width: auto; flex: 1; }
 .own-btn { width: auto; flex: 1; }
-.eye-btn { display:flex; align-items:center; justify-content:center; flex: 0 0 42px; background: #eef3f9; border: none; color: #3a8dde; width: 42px; height: 42px; padding: 0; border-radius: 12px; cursor: pointer; transition: background 0.2s; }	.fab { position:fixed; bottom:80px; right:20px; background:#3a8dde; color:white; font-size:25px; border:none; border-radius:50%; width:55px; height:55px; cursor:pointer; box-shadow:0 4px 15px rgba(58,141,222,0.4); z-index:100; transition:transform 0.2s; }.fab:hover { transform:scale(1.1); }
+.eye-btn { display:flex; align-items:center; justify-content:center; flex: 0 0 42px; background: #eef3f9; border: none; color: #3a8dde; width: 42px; height: 42px; padding: 0; border-radius: 12px; cursor: pointer; transition: background 0.2s; }
+.fab { position:fixed; bottom:80px; right:20px; background:#3a8dde; color:white; font-size:25px; border:none; border-radius:50%; width:55px; height:55px; cursor:pointer; box-shadow:0 4px 15px rgba(58,141,222,0.4); z-index:100; transition:transform 0.2s; }
+.fab:hover { transform:scale(1.1); }
 
 .bottom-nav { position:fixed; bottom:0; width:100%; background:rgba(58,141,222,0.18); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border-top:1px solid rgba(58,141,222,0.2); display:flex; justify-content:space-around; padding:10px 0 12px; z-index:200; }
 .nav-item { display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; color:#2a6db5; transition:color 0.2s; position:relative; }
@@ -181,6 +181,7 @@ ey
 #loadingScreen h2 { color:#3a8dde; font-size:20px; font-weight:800; margin-bottom:10px; }
 #loadingScreen p { color:#888; font-size:13px; }
 .spin { width:40px; height:40px; border:4px solid #eef3f9; border-top-color:#3a8dde; border-radius:50%; animation:spin 0.8s linear infinite; margin-bottom:16px; }
+@keyframes spin { to { transform:rotate(360deg); } }
 .cbox.fullscreen .cinput-row { position: fixed; bottom: 0; left: 0; width: 100%; z-index: 10001; }
 .cbox.fullscreen .cmsgs { padding-bottom: 70px; }
 
@@ -200,21 +201,142 @@ ey
   .zoom-controls { gap: 8px; }
 }
 
-/* Welcome Page Animations */
-@keyframes slideInUp { from { opacity:0; transform:translateY(60px); } to { opacity:1; transform:translateY(0); } }
-@keyframes profileFlyIn { from { opacity:0; transform:translate(-150vw, -150vh) scale(0.3); } to { opacity:1; transform:translate(0, 0) scale(1); } }
-@keyframes float { 0%, 100% { transform:translateY(0px); } 50% { transform:translateY(-15px); } }
+/* ─── WELCOME SCREEN ─────────────────────────────────── */
+#welcomeModal {
+  background: #0d1f3c;
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  z-index: 99999;
+}
+.welcome-stage {
+  position: relative; width: 100%; height: 100%;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: #0d1f3c;
+}
+.w-grid-bg {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(58,141,222,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(58,141,222,0.05) 1px, transparent 1px);
+  background-size: 36px 36px;
+}
+.w-shimmer {
+  position: absolute; inset: 0; pointer-events: none; z-index: 2;
+  background: linear-gradient(105deg, transparent 35%, rgba(58,141,222,0.07) 50%, transparent 65%);
+  background-size: 200% 100%;
+  animation: wShimmer 2.8s ease-in-out 1.6s infinite;
+}
+@keyframes wShimmer {
+  0%   { background-position: -100% 0; }
+  100% { background-position:  100% 0; }
+}
+.w-particles { position: absolute; inset: 0; pointer-events: none; }
+.w-dot {
+  position: absolute; border-radius: 50%; background: #3a8dde; opacity: 0;
+  animation: wTwinkle var(--d,2s) ease-in-out var(--delay,0s) infinite;
+}
+@keyframes wTwinkle {
+  0%,100% { opacity:0; transform:scale(0.5); }
+  50%      { opacity:var(--op,0.5); transform:scale(1); }
+}
+.w-rings { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-54%); }
+.w-ring {
+  position: absolute; border-radius: 50%;
+  border: 1.5px solid rgba(58,141,222,0.45);
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%) scale(0);
+  opacity: 0;
+  animation: wRingExpand 2.8s ease-out var(--rdelay,0s) infinite;
+}
+@keyframes wRingExpand {
+  0%   { transform: translate(-50%,-50%) scale(0); opacity: 0.7; }
+  100% { transform: translate(-50%,-50%) scale(1); opacity: 0;   }
+}
 
-#welcomeModal { background:#f2f6fc; position:fixed; top:0; left:0; width:100%; height:100%; z-index:99999; }
-.welcome-screen { position:relative; width:100%; height:100%; overflow:hidden; display:flex; align-items:center; justify-content:center; }
-.logo-left, .logo-right { position:absolute; top:50%; transform:translateY(-50%); width:200px; height:200px; }
-.logo-left { left:-200px; animation: logoLeftIn 2s ease-out forwards; }
-.logo-right { right:-200px; animation: logoRightIn 2s ease-out forwards; }
-.logo-left svg, .logo-right svg { width:100%; height:100%; }
-@keyframes logoLeftIn { 0% { left:-200px; } 50% { left:calc(50vw - 100px); } 100% { left:calc(75vw - 100px); } }
-@keyframes logoRightIn { 0% { right:-200px; } 50% { right:calc(50vw - 100px); } 100% { right:calc(25vw - 100px); } }
-.logo-fall { animation: logoFall 1s ease-in forwards; }
-@keyframes logoFall { 0% { top:50%; } 100% { top:calc(100vh - 200px); } }
+/* floating SVG icon spots */
+.w-icon {
+  position: absolute; opacity: 0; z-index: 4;
+  animation: wFloatUp var(--fdur,3.5s) ease-in-out var(--fdelay,0s) infinite;
+}
+.w-icon svg { display: block; }
+@keyframes wFloatUp {
+  0%   { opacity: 0;    transform: translateY(20px) rotate(var(--rot,-10deg)); }
+  20%  { opacity: 0.55; }
+  80%  { opacity: 0.35; }
+  100% { opacity: 0;    transform: translateY(-50px) rotate(var(--rot2,10deg)); }
+}
+
+/* center block */
+.w-logo-wrap {
+  position: relative; z-index: 10;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 16px;
+  margin-bottom: 56px;
+}
+.w-logo-circle {
+  width: 90px; height: 90px; border-radius: 26px;
+  background: linear-gradient(145deg,#1a4a8a,#2d6cc0);
+  border: 2px solid #3a8dde;
+  display: flex; align-items: center; justify-content: center;
+  animation: wLogoPop 0.8s cubic-bezier(0.34,1.56,0.64,1) 0.3s both,
+             wLogoFloat 3s ease-in-out 1.2s infinite;
+  box-shadow: 0 0 50px rgba(58,141,222,0.25), inset 0 1px 0 rgba(255,255,255,0.12);
+}
+@keyframes wLogoPop {
+  from { transform: scale(0) rotate(-20deg); opacity: 0; }
+  to   { transform: scale(1) rotate(0deg);   opacity: 1; }
+}
+@keyframes wLogoFloat {
+  0%,100% { transform: translateY(0px);  }
+  50%     { transform: translateY(-10px);}
+}
+.w-app-name {
+  color: white; font-size: 22px; font-weight: 800;
+  letter-spacing: 0.3px; text-align: center;
+  animation: wFadeUp 0.7s ease-out 0.9s both;
+}
+.w-app-tagline {
+  color: #5ba8f5; font-size: 13px; font-weight: 600;
+  text-align: center; letter-spacing: 0.6px;
+  animation: wFadeUp 0.7s ease-out 1.1s both;
+}
+@keyframes wFadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* progress */
+.w-progress-wrap {
+  position: relative; z-index: 10;
+  width: 140px;
+  display: flex; flex-direction: column; align-items: center;
+  animation: wFadeUp 0.7s ease-out 1.3s both;
+}
+.w-progress-track {
+  width: 100%; height: 3px;
+  background: rgba(58,141,222,0.2);
+  border-radius: 4px; overflow: hidden;
+}
+.w-progress-fill {
+  height: 100%; width: 0;
+  background: linear-gradient(90deg,#3a8dde,#5ba8f5);
+  border-radius: 4px;
+  animation: wProgressFill 2.2s cubic-bezier(0.4,0,0.2,1) 1.5s both;
+}
+@keyframes wProgressFill {
+  from { width: 0%;   }
+  to   { width: 100%; }
+}
+.w-progress-label {
+  font-size: 11px; color: #5ba8f5; font-weight: 700;
+  text-align: center; margin-top: 9px;
+  letter-spacing: 0.8px; text-transform: uppercase;
+  opacity: 0;
+  animation: wFadeIn 0.4s ease-out 1.6s both;
+}
+@keyframes wFadeIn { from{opacity:0;} to{opacity:1;} }
+/* ─────────────────────────────────────────────────────── */
 </style>
 </head>
 <body>
@@ -226,7 +348,6 @@ ey
 </div>
 
 <div class="header">
-  <!-- LOGO: open book + handshake -->
   <svg class="logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
     <path d="M15 40 C25 30 40 24 50 24 C60 24 75 30 85 40 L85 60 C75 50 65 46 50 46 C35 46 25 50 15 60 Z" fill="#3a8dde" opacity="0.15"/>
     <path d="M15 60 L30 75 C40 82 50 82 60 75 L75 60" fill="none" stroke="#3a8dde" stroke-width="5" stroke-linecap="round"/>
@@ -337,7 +458,7 @@ ey
       <div><strong>Make a Deal</strong>Tap "Make a Deal" on any listing to chat with the seller.</div>
     </div>
     <div class="help-item">
-      <svg class="hi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><path d="M12 1C6.477 1 2 5.477 2 11c0 5.517 4 10 10 10s10-4.5 10-10-4 9-10 9z"/><path d="M12 14a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+      <svg class="hi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7"/></svg>
       <div><strong>Profile</strong>See your listings and delete ones you no longer want.</div>
     </div>
     <div class="help-item">
@@ -367,6 +488,11 @@ ey
     </div>
     <input class="field" id="authEmail" type="email" placeholder="Email address">
     <input class="field" id="authPass" type="password" placeholder="Password (min 6 characters)">
+    <div id="authPhotoRow" style="display:none">
+      <label class="photo-label" for="authPhotoInput" style="margin:5px 0;"><svg viewBox='0 0 24 24'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><polyline points='21 15 16 10 5 21'/></svg>Add Profile Picture</label>
+      <input type='file' id='authPhotoInput' accept='image/*' style='display:none;'>
+      <img id="authPhotoPreview" style="display:none;width:80px;height:80px;border-radius:10px;margin:8px 0;object-fit:cover;">
+    </div>
     <div class="row-btns">
       <button class="btn-grey" id="cancelAuth">Cancel</button>
       <button class="btn-blue" id="submitAuth">Log In</button>
@@ -436,49 +562,78 @@ ey
 
 <!-- WELCOME MODAL -->
 <div class="modal" id="welcomeModal">
-  <div class="welcome-screen">
-    <div class="logo-left">
-      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <clipPath id="leftClip">
-            <rect x="0" y="0" width="50" height="100"/>
-          </clipPath>
-        </defs>
-        <g clip-path="url(#leftClip)">
-          <path d="M15 40 C25 30 40 24 50 24 C60 24 75 30 85 40 L85 60 C75 50 65 46 50 46 C35 46 25 50 15 60 Z" fill="#3a8dde" opacity="0.15"/>
-          <path d="M15 60 L30 75 C40 82 50 82 60 75 L75 60" fill="none" stroke="#3a8dde" stroke-width="5" stroke-linecap="round"/>
-          <path d="M15 60 L35 35 C40 28 50 28 50 28 C50 28 60 28 65 35 L85 60" fill="none" stroke="#3a8dde" stroke-width="5" stroke-linecap="round"/>
-          <path d="M33 49 L40 56 L48 48" fill="none" stroke="#1a5fa8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M52 52 L60 44 L66 50" fill="none" stroke="#1a5fa8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M38 61 C42 65 50 65 54 61" fill="none" stroke="#1a5fa8" stroke-width="4" stroke-linecap="round"/>
-          <path d="M30 40 C34 36 40 34 46 36 C52 38 58 48 62 52" fill="none" stroke="#1a5fa8" stroke-width="4" stroke-linecap="round"/>
-          <path d="M45 38 L53 46" fill="none" stroke="#1a5fa8" stroke-width="4" stroke-linecap="round"/>
-          <path d="M25 70 L35 78" fill="none" stroke="#1a5fa8" stroke-width="4" stroke-linecap="round"/>
-          <path d="M75 70 L65 78" fill="none" stroke="#1a5fa8" stroke-width="4" stroke-linecap="round"/>
-        </g>
+  <div class="welcome-stage">
+
+    <div class="w-grid-bg"></div>
+    <div class="w-shimmer"></div>
+    <div class="w-particles" id="wParticles"></div>
+
+    <!-- Ripple rings centred on the logo -->
+    <div class="w-rings">
+      <div class="w-ring" style="width:110px;height:110px;--rdelay:1.6s;"></div>
+      <div class="w-ring" style="width:200px;height:200px;--rdelay:2.0s;"></div>
+      <div class="w-ring" style="width:300px;height:300px;--rdelay:2.4s;"></div>
+      <div class="w-ring" style="width:420px;height:420px;--rdelay:2.8s;"></div>
+    </div>
+
+    <!-- Floating SVG icons (no emojis) -->
+    <!-- Book icon — bottom left -->
+    <div class="w-icon" style="left:8%;top:68%;--fdur:4s;--fdelay:1.8s;--rot:-12deg;--rot2:8deg;">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(91,168,245,0.7)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
       </svg>
     </div>
-    <div class="logo-right">
-      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <clipPath id="rightClip">
-            <rect x="50" y="0" width="50" height="100"/>
-          </clipPath>
-        </defs>
-        <g clip-path="url(#rightClip)">
-          <path d="M15 40 C25 30 40 24 50 24 C60 24 75 30 85 40 L85 60 C75 50 65 46 50 46 C35 46 25 50 15 60 Z" fill="#3a8dde" opacity="0.15"/>
-          <path d="M15 60 L30 75 C40 82 50 82 60 75 L75 60" fill="none" stroke="#3a8dde" stroke-width="5" stroke-linecap="round"/>
-          <path d="M15 60 L35 35 C40 28 50 28 50 28 C50 28 60 28 65 35 L85 60" fill="none" stroke="#3a8dde" stroke-width="5" stroke-linecap="round"/>
-          <path d="M33 49 L40 56 L48 48" fill="none" stroke="#1a5fa8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M52 52 L60 44 L66 50" fill="none" stroke="#1a5fa8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M38 61 C42 65 50 65 54 61" fill="none" stroke="#1a5fa8" stroke-width="4" stroke-linecap="round"/>
-          <path d="M30 40 C34 36 40 34 46 36 C52 38 58 48 62 52" fill="none" stroke="#1a5fa8" stroke-width="4" stroke-linecap="round"/>
-          <path d="M45 38 L53 46" fill="none" stroke="#1a5fa8" stroke-width="4" stroke-linecap="round"/>
-          <path d="M25 70 L35 78" fill="none" stroke="#1a5fa8" stroke-width="4" stroke-linecap="round"/>
-          <path d="M75 70 L65 78" fill="none" stroke="#1a5fa8" stroke-width="4" stroke-linecap="round"/>
-        </g>
+    <!-- Pencil icon — bottom right -->
+    <div class="w-icon" style="left:80%;top:65%;--fdur:3.6s;--fdelay:2.2s;--rot:10deg;--rot2:-14deg;">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgba(91,168,245,0.7)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
       </svg>
     </div>
+    <!-- Graduation cap — top left -->
+    <div class="w-icon" style="left:7%;top:20%;--fdur:4.5s;--fdelay:2.8s;--rot:-8deg;--rot2:12deg;">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="rgba(91,168,245,0.65)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
+      </svg>
+    </div>
+    <!-- Ruler/triangle — top right -->
+    <div class="w-icon" style="left:81%;top:18%;--fdur:3.8s;--fdelay:3.2s;--rot:14deg;--rot2:-6deg;">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgba(91,168,245,0.65)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M2 20L12 4l10 16H2z"/><line x1="12" y1="12" x2="12" y2="20"/><line x1="8" y1="16" x2="16" y2="16"/>
+      </svg>
+    </div>
+    <!-- Bookmark — bottom centre -->
+    <div class="w-icon" style="left:46%;top:76%;--fdur:4.2s;--fdelay:3.6s;--rot:-5deg;--rot2:10deg;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(91,168,245,0.6)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+      </svg>
+    </div>
+
+    <!-- Logo + text -->
+    <div class="w-logo-wrap">
+      <div class="w-logo-circle">
+        <svg width="52" height="52" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 40 C25 30 40 24 50 24 C60 24 75 30 85 40 L85 60 C75 50 65 46 50 46 C35 46 25 50 15 60 Z" fill="#5ba8f5" opacity="0.25"/>
+          <path d="M15 60 L30 75 C40 82 50 82 60 75 L75 60" fill="none" stroke="#5ba8f5" stroke-width="5" stroke-linecap="round"/>
+          <path d="M15 60 L35 35 C40 28 50 28 50 28 C50 28 60 28 65 35 L85 60" fill="none" stroke="#5ba8f5" stroke-width="5" stroke-linecap="round"/>
+          <path d="M33 49 L40 56 L48 48" fill="none" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M52 52 L60 44 L66 50" fill="none" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M38 61 C42 65 50 65 54 61" fill="none" stroke="white" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="w-app-name">Educators Exchange</div>
+        <div class="w-app-tagline">Share · Sell · Discover</div>
+      </div>
+    </div>
+
+    <!-- Progress — centred via flexbox on .w-progress-wrap -->
+    <div class="w-progress-wrap">
+      <div class="w-progress-track">
+        <div class="w-progress-fill"></div>
+      </div>
+      <div class="w-progress-label">Loading...</div>
+    </div>
+
   </div>
 </div>
 
@@ -569,7 +724,7 @@ waitForFirebase(function(firebaseAvailable) {
 
   var lsElm=document.getElementById("loadingScreen"); if(lsElm) lsElm.style.display="none";
 
-  var currentUser=null,currentCat="all",currentPhotos=[],allItems=[],authMode="login",activeChatId=null,chatRef=null,conversations=[],currentZoomImages=[],currentZoomIndex=0,welcomeShown=false,avatarCache={};
+  var currentUser=null,currentCat="all",currentPhotos=[],allItems=[],authMode="login",activeChatId=null,chatRef=null,conversations=[],currentZoomImages=[],currentZoomIndex=0,welcomeShown=false,avatarCache={},authPhotoData=null;
 
   function toast(msg){var t=document.getElementById("toast");if(!t)return;t.textContent=msg;t.classList.add("show");setTimeout(function(){t.classList.remove("show");},2800);}
   function openM(id){var e=document.getElementById(id);if(e)e.classList.add("open");}
@@ -594,19 +749,24 @@ waitForFirebase(function(firebaseAvailable) {
   function showWelcomeOnce(){
     if(welcomeShown)return;
     welcomeShown=true;
-    openM("welcomeModal");
-    var logoLeft = document.querySelector('.logo-left');
-    var logoRight = document.querySelector('.logo-right');
 
-    // Start falling after meeting
-    setTimeout(function(){
-      logoLeft.classList.add('logo-fall');
-      logoRight.classList.add('logo-fall');
-      // Close when fall animation ends
-      logoLeft.addEventListener('animationend', function(){
-        closeM("welcomeModal");
-      });
-    }, 2000);
+    // Seed the particle field
+    (function(){
+      var pc=document.getElementById('wParticles');
+      if(!pc)return;
+      for(var i=0;i<32;i++){
+        var d=document.createElement('div');
+        d.className='w-dot';
+        var sz=Math.random()*3+1.5;
+        d.style.cssText='width:'+sz+'px;height:'+sz+'px;left:'+(Math.random()*96+2)+'%;top:'+(Math.random()*90+4)+'%;--d:'+(Math.random()*2+1.5).toFixed(1)+'s;--delay:'+(Math.random()*3).toFixed(1)+'s;--op:'+(Math.random()*0.35+0.25).toFixed(2)+';';
+        pc.appendChild(d);
+      }
+    })();
+
+    openM("welcomeModal");
+
+    // Close after the progress bar finishes (1.5s delay + 2.2s fill + 0.4s buffer)
+    setTimeout(function(){ closeM("welcomeModal"); }, 4300);
   }
 
   ["postModal","helpModal","authModal","profileModal","inboxModal"].forEach(function(id){
@@ -628,6 +788,28 @@ waitForFirebase(function(firebaseAvailable) {
   bind("tabSignup",function(){setAuthMode("signup");});
   bind("closeProfile",function(){closeM("profileModal");});
   bind("closeInbox",function(){closeM("inboxModal");});
+
+  var authPhotoInput=document.getElementById("authPhotoInput");
+  if(authPhotoInput){authPhotoInput.addEventListener("change",function(e){
+    var file=e.target.files[0];if(!file)return;
+    var reader=new FileReader();
+    reader.onload=function(ev){
+      var img=new Image();
+      img.onload=function(){
+        var canvas=document.createElement("canvas");
+        var MAX=200,w=img.width,h=img.height;
+        if(w>MAX){h=h*MAX/w;w=MAX;}if(h>MAX){w=w*MAX/h;h=MAX;}
+        canvas.width=w;canvas.height=h;
+        canvas.getContext("2d").drawImage(img,0,0,w,h);
+        authPhotoData=canvas.toDataURL("image/jpeg",0.8);
+        var preview=document.getElementById("authPhotoPreview");
+        if(preview){preview.src=authPhotoData;preview.style.display="block";}
+      };
+      img.src=ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });}
+
   bind("closeChat",closeChat);
   bind("chatFullBtn",toggleChatFullscreen);
   bind("sendBtn",sendMessage);
@@ -704,7 +886,7 @@ waitForFirebase(function(firebaseAvailable) {
   }
 
   if(auth&&typeof auth.onAuthStateChanged==="function"){
-    auth.onAuthStateChanged(function(user){currentUser=user;render();if(user)listenInbox();showWelcomeOnce();});
+    auth.onAuthStateChanged(function(user){currentUser=user;if(user&&user.uid){loadUserAvatar(user.uid);}render();if(user)listenInbox();showWelcomeOnce();});
   } else {currentUser=null;render();showWelcomeOnce();}
 
   function render(){
@@ -713,6 +895,7 @@ waitForFirebase(function(firebaseAvailable) {
     var filtered=allItems.filter(function(item){
       return(currentCat==="all"||item.category===currentCat)&&item.title.toLowerCase().includes(search);
     });
+    filtered.forEach(function(item){if(item.uid){loadUserAvatar(item.uid);}});
     if(filtered.length===0){
       grid.style.display="block";
       grid.innerHTML="<p style='text-align:center;color:#bbb;font-size:14px;padding:40px 0'>No items yet. Be the first to post!</p>";
@@ -726,7 +909,8 @@ waitForFirebase(function(firebaseAvailable) {
       var card=document.createElement("div");card.className="card";
       var posterInitials=(item.postedBy||"?").slice(0,2).toUpperCase();
       var posterBg=avatarBg(item.postedBy);
-      var posterAvatarHTML="<div style='width:24px;height:24px;border-radius:50%;background:"+posterBg+";display:flex;align-items:center;justify-content:center;color:white;font-size:10px;font-weight:700;flex-shrink:0;' data-user-avatar='"+item.uid+"'>"+posterInitials+"</div>";
+      var cachedAvatar=avatarCache[item.uid];
+      var posterAvatarHTML=cachedAvatar?"<img src='"+cachedAvatar+"' style='width:24px;height:24px;border-radius:50%;object-fit:cover;' alt='Avatar'>":" <div style='width:24px;height:24px;border-radius:50%;background:"+posterBg+";display:flex;align-items:center;justify-content:center;color:white;font-size:10px;font-weight:700;flex-shrink:0;' data-user-avatar='"+item.uid+"'>"+posterInitials+"</div>";
       card.innerHTML="<img src='"+imgSrc+"' alt='"+item.title+"'><h3>"+item.title+"</h3><p class='price'>$"+item.price+"</p><p class='card-meta' style='display:flex;align-items:center;gap:8px;'>"+posterAvatarHTML+"<span>"+(item.postedBy||"Anonymous")+"</span></p>";
       if(item.uid){loadUserAvatar(item.uid);};
       card.addEventListener("click",(function(i){return function(){openItemDetail(i);};})(item));
@@ -803,7 +987,9 @@ waitForFirebase(function(firebaseAvailable) {
     if(t)t.classList.toggle("active",mode==="login");if(s)s.classList.toggle("active",mode==="signup");
     var sa=document.getElementById("submitAuth");if(sa)sa.textContent=mode==="login"?"Log In":"Sign Up";
     var nr=document.getElementById("nameRow");if(nr)nr.style.display=mode==="signup"?"block":"none";
+    var apr=document.getElementById("authPhotoRow");if(apr)apr.style.display=mode==="signup"?"block":"none";
     var ae=document.getElementById("authErr");if(ae)ae.classList.remove("show");
+    authPhotoData=null;var preview=document.getElementById("authPhotoPreview");if(preview)preview.style.display="none";
   }
 
   function handleAuth(){
@@ -818,7 +1004,14 @@ waitForFirebase(function(firebaseAvailable) {
     var p=authMode==="login"
       ?auth.signInWithEmailAndPassword(email,pass)
       :auth.createUserWithEmailAndPassword(email,pass).then(function(cred){return cred.user.updateProfile({displayName:name}).then(function(){return cred;});});
-    p.then(function(){toast(authMode==="login"?"Welcome back!":"Welcome, "+name+"!");closeM("authModal");})
+    p.then(function(cred){
+      toast(authMode==="login"?"Welcome back!":"Welcome, "+name+"!");
+      if(authMode==="signup"&&authPhotoData&&db&&cred.user){
+        avatarCache[cred.user.uid]=authPhotoData;
+        db.ref("users/"+cred.user.uid+"/avatar").set(authPhotoData).then(function(){}).catch(function(){});
+      }
+      closeM("authModal");
+    })
     .catch(function(e){
       var msgs={"auth/user-not-found":"No account with that email.","auth/wrong-password":"Incorrect password.","auth/email-already-in-use":"Email already registered.","auth/weak-password":"Password needs 6+ characters.","auth/invalid-email":"Enter a valid email.","auth/invalid-credential":"Incorrect email or password.","auth/too-many-requests":"Too many attempts. Please wait a moment.","auth/network-request-failed":"Network error. Check your connection."};
       if(err){err.textContent=msgs[e.code]||e.message||e;err.classList.add("show");}
@@ -859,7 +1052,8 @@ waitForFirebase(function(firebaseAvailable) {
     }
     var name=currentUser.displayName||currentUser.email;
     var customAvatar=localStorage.getItem('customAvatar_'+currentUser.uid);
-    var avatarHTML=customAvatar?"<img src='"+customAvatar+"' style='width:72px;height:72px;border-radius:50%;object-fit:cover;' alt='Avatar'>":"<div class='p-avatar' id='currentUserAvatar' style='background:"+avatarBg(name)+"'>"+(name||"").slice(0,2).toUpperCase()+"</div>";
+    var cachedAvatar=avatarCache[currentUser.uid];
+    var avatarHTML=cachedAvatar?"<img src='"+cachedAvatar+"' style='width:72px;height:72px;border-radius:50%;object-fit:cover;' alt='Avatar'>":customAvatar?"<img src='"+customAvatar+"' style='width:72px;height:72px;border-radius:50%;object-fit:cover;' alt='Avatar'>":"<div class='p-avatar' id='currentUserAvatar' style='background:"+avatarBg(name)+"'>"+(name||"").slice(0,2).toUpperCase()+"</div>";
     if(currentUser.uid){loadUserAvatar(currentUser.uid);}
     var myItems=allItems.filter(function(i){return i.uid===currentUser.uid;});
     var itemsHTML=myItems.length===0
@@ -885,7 +1079,8 @@ waitForFirebase(function(firebaseAvailable) {
           canvas.width=w;canvas.height=h;
           canvas.getContext("2d").drawImage(img,0,0,w,h);
           var dataURL=canvas.toDataURL("image/jpeg",0.8);
-          if(db&&currentUser){db.ref("users/"+currentUser.uid+"/avatar").set(dataURL).then(function(){renderProfile();toast("Profile picture updated!");}).catch(function(){toast("Error saving avatar.");});}
+          avatarCache[currentUser.uid]=dataURL;
+          if(db&&currentUser){db.ref("users/"+currentUser.uid+"/avatar").set(dataURL).then(function(){renderProfile();render();document.querySelectorAll('[data-user-avatar="'+currentUser.uid+'"]').forEach(function(el){el.innerHTML="<img src='"+dataURL+"' style='width:100%;height:100%;border-radius:50%;object-fit:cover;' alt='Avatar'>"});toast("Profile picture updated!");}).catch(function(){toast("Error saving avatar.");});}
         };
         img.src=ev.target.result;
       };
@@ -931,7 +1126,6 @@ waitForFirebase(function(firebaseAvailable) {
     var inputEl=document.getElementById("chatInput");if(inputEl)inputEl.value="";
     openM("chatModal");
     if(!db||!db.ref){toast("Chat history unavailable.");return;}
-    // show a one-time tip about fullscreen for this session
     try{if(!sessionStorage.getItem('chat_fullscreen_tip_shown')){toast('Tip: tap the Back button to toggle fullscreen chat.');sessionStorage.setItem('chat_fullscreen_tip_shown','1');}}catch(e){}
     if(chatRef&&chatRef.off)chatRef.off();
     chatRef=db.ref("chats/"+chatId+"/messages");
@@ -963,15 +1157,12 @@ waitForFirebase(function(firebaseAvailable) {
     var text=input.value.trim();if(!text)return;input.value="";
     var msg={text:text,uid:currentUser.uid,senderName:currentUser.displayName||currentUser.email,ts:Date.now()};
     if(!db||!db.ref){
-      // still save locally so it isn't lost
       saveMessageToLocal(activeChatId,msg);
       toast("Message saved locally (offline).");
-      // render immediately
       try{var box=document.getElementById("chatMsgs");if(box){var row=document.createElement('div');row.className='mrow mine';row.innerHTML="<div><div class='bbl'>"+msg.text+"</div></div><div class='mtime'>"+new Date(msg.ts).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+"</div>";box.appendChild(row);box.scrollTop=box.scrollHeight;}}catch(e){}
       return;
     }
     db.ref("chats/"+activeChatId+"/messages").push(msg).catch(function(e){toast("Send failed: "+(e&&e.message?e.message:e));});
-    // also save locally for faster reloading
     saveMessageToLocal(activeChatId,msg);
     db.ref("chats/"+activeChatId+"/meta").once("value").then(function(snap){
       if(!snap||!snap.exists||!snap.exists())return;
